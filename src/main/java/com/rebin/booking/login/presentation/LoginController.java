@@ -65,7 +65,7 @@ public class LoginController {
                 .maxAge(COOKIE_AGE_SECONDS)
                 .sameSite("None")
                 .secure(true)
-                .httpOnly(true)
+                .httpOnly(false)
                 .path("/")
                 .build();
     }
