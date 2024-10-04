@@ -36,9 +36,6 @@ public class Member extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private ProviderType provider;
 
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
     public Member(String loginId, String email, ProviderType provider) {
         this.email = email;
         this.loginId = loginId;
