@@ -4,6 +4,11 @@ import com.rebin.booking.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.REMOVE;
+
 @Getter
 @Entity
 public class Product extends BaseTimeEntity {
@@ -30,5 +35,8 @@ public class Product extends BaseTimeEntity {
     private int extraPersonFee;
 
     @Column(length = 5000)
-    private String guildLine;
+    private String guideLine;
+
+    @OneToMany(mappedBy = "product", cascade = REMOVE)
+    private List<ProductImage> images = new ArrayList<>();
 }

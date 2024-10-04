@@ -11,7 +11,8 @@ public enum ErrorCode {
     INVALID_TOKEN(400,"L005","err.invalid.token"),
     EXPIRED_REFRESH_TOKEN(400,"L006","err.expired.refresh-token"),
     INVALID_REFRESH_TOKEN(400,"L007","err.invalid.refresh-token"),
-    FAIL_EXTEND(403,"L008","err.fail.login-extend");
+    FAIL_EXTEND(403,"L008","err.fail.login-extend"),
+    INVALID_PRODUCT(400,"P001","err.invalid.product");
     private final int status;
     private final String code;
     private final String msg;
