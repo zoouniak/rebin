@@ -1,8 +1,10 @@
 package com.rebin.booking.common.excpetion;
 
 public enum ErrorCode {
+    SERVER_ERROR(500,"S001","err.server"),
     INVALID_AUTHORITY(403, "A001", "err.invalid.authority"),
     INVALID_REQUEST(400,"A002","err.invalid.request"),
+    INVALID_ARGUMENT(400,"A003","err.invalid.argument"),
 
     FAIL_GET_USERINFO(500, "L001", "err.fail.get-userinfo"),
     INVALID_AUTHORIZE_CODE(500, "L002", "err.invalid.auth-code"),
