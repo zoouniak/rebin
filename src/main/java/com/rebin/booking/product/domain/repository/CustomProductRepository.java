@@ -15,6 +15,7 @@ import static com.rebin.booking.product.domain.QProduct.product;
 @RequiredArgsConstructor
 public class CustomProductRepository {
     private final JPAQueryFactory queryFactory;
+    private static final long PRODUCT_LIMIT = 6L;
 
     public List<ProductResponse> getProducts(final Long productId) {
         return queryFactory.select(Projections.constructor(ProductResponse.class,
@@ -25,6 +26,7 @@ public class CustomProductRepository {
                         product.price
                 )).from(product)
                 .where(ltProductId(productId))
+                .limit(PRODUCT_LIMIT)
                 .orderBy(product.id.desc())
                 .fetch();
     }

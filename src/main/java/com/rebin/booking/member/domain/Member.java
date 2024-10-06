@@ -7,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)// todo 공부
@@ -35,9 +33,6 @@ public class Member extends BaseTimeEntity {
     @Column
     @Enumerated(value = EnumType.STRING)
     private ProviderType provider;
-
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
 
     public Member(String loginId, String email, ProviderType provider) {
         this.email = email;
