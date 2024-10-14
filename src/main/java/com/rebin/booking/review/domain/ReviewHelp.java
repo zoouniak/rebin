@@ -1,7 +1,9 @@
 package com.rebin.booking.review.domain;
 
-import com.rebin.booking.member.domain.Member;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.Getter;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -13,11 +15,9 @@ public class ReviewHelp {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column(nullable = false)
+    private Long memberId;
 
-    @ManyToOne
-    @JoinColumn(name = "review_id")
-    private Review review;
+    @Column(nullable = false)
+    private Long reviewId;
 }
