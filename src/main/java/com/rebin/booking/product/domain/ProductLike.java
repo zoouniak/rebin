@@ -12,17 +12,17 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductLIke {
+public class ProductLike {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private Long member;
+    private Long memberId;
 
-    private Long product;
+    private Long productId;
 
-    public ProductLIke(Long member, Long product) {
-        this.member = member;
-        this.product = product;
+    public ProductLike(Long memberId, Long productId) {
+        this.memberId = memberId;
+        this.productId = productId;
     }
 }
