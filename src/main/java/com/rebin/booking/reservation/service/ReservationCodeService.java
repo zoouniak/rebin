@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class ReservationCodeService {
     private final CacheManager cacheManager;
     private final static String CACHE = "reservationCodes";
-    public boolean isCodeUnique(String code) {
+    public boolean isCodeUnique(final String code) {
         Cache cache = cacheManager.getCache(CACHE);
         Cache.ValueWrapper valueWrapper = cache.get(code);
         if (valueWrapper != null) {
