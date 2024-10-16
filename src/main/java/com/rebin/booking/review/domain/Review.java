@@ -6,8 +6,12 @@ import com.rebin.booking.product.domain.Product;
 import com.rebin.booking.reservation.domain.Reservation;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.REMOVE;
+import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -17,22 +21,24 @@ public class Review extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
-    @ManyToOne
+    @Column
+    private LocalDate shootDate;
+
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column
-    @ColumnDefault("0")
-    private int helpCnt;
-
     @Column(length = 5000)
     private String content;
+
+    @OneToMany(mappedBy = "review", cascade = REMOVE)
+    private List<Comment> comments;
 }

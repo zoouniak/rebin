@@ -7,6 +7,8 @@ import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -35,6 +37,9 @@ public class Reservation extends BaseTimeEntity {
     @Column
     @Enumerated(value = STRING)
     private ReservationStatusType status;
+
+    @Column
+    private LocalDate shootDate;
 
     @Column
     private boolean isAgreeUpload;
