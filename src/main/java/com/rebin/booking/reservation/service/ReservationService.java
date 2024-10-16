@@ -31,7 +31,7 @@ public class ReservationService {
     private static final int ATTEMPT_CNT = 10;
 
     @Transactional
-    public ReservationResponse reserve(Long memberId, ReservationRequest request) {
+    public ReservationResponse reserve(final Long memberId, final ReservationRequest request) {
         Member member = findMemberWithIdAndEmail(memberId, request.email());
         Product product = findProduct(request.productId());
         TimeSlot timeSlot = findTimeSlot(request.timeSlotId());
@@ -56,27 +56,27 @@ public class ReservationService {
 
     private String generateUniqueReservationCode() {
         String generateCode;
-        for(int i=0;i<ATTEMPT_CNT;i++){
+        for (int i = 0; i < ATTEMPT_CNT; i++) {
             generateCode = ReservationCodeGenerator.generateCode();
 
-            if(reservationCodeService.isCodeUnique(generateCode)){
+            if (reservationCodeService.isCodeUnique(generateCode)) {
                 return generateCode;
             }
         }
         throw new ReservationException(MAX_ATTEMPTS_EXCEEDED);
     }
 
-    private Member findMemberWithIdAndEmail(Long memberId, String email) {
+    private Member findMemberWithIdAndEmail(final Long memberId, final String email) {
         return memberRepository.findByIdAndEmail(memberId, email)
                 .orElseThrow(() -> new ReservationException(INVALID_REQUEST));
     }
 
-    private Product findProduct(Long productId) {
+    private Product findProduct(final Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ReservationException(INVALID_PRODUCT));
     }
 
-    private TimeSlot findTimeSlot(Long timeSlotId) {
+    private TimeSlot findTimeSlot(final Long timeSlotId) {
         return timeSlotRepository.findById(timeSlotId)
                 .orElseThrow(() -> new ReservationException(INVALID_TIMESLOT));
     }
