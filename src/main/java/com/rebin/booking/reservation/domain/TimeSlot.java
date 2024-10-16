@@ -1,5 +1,7 @@
 package com.rebin.booking.reservation.domain;
 
+import com.rebin.booking.common.excpetion.ErrorCode;
+import com.rebin.booking.common.excpetion.ReservationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,5 +36,11 @@ public class TimeSlot {
         this.date = date;
         this.startTime = startTime;
         this.isAvailable = true;
+    }
+
+    public void SetUnAvailable() {
+        if (!this.isAvailable)
+            throw new ReservationException(ErrorCode.RESERVATION_FULL);
+        this.isAvailable = false;
     }
 }

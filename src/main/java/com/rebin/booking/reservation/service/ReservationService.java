@@ -37,6 +37,8 @@ public class ReservationService {
         TimeSlot timeSlot = findTimeSlot(request.timeSlotId());
         String code = generateUniqueReservationCode();
 
+        timeSlot.SetUnAvailable();
+
         Reservation reservation = Reservation.builder()
                 .product(product)
                 .member(member)
