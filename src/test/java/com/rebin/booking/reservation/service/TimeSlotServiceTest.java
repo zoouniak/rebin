@@ -1,7 +1,7 @@
 package com.rebin.booking.reservation.service;
 
 import com.rebin.booking.reservation.domain.TimeSlot;
-import com.rebin.booking.reservation.domain.TimeSlotRepository;
+import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
 import com.rebin.booking.reservation.dto.response.TimeSlotResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
