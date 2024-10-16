@@ -1,6 +1,6 @@
 package com.rebin.booking.reservation.presentation;
 
-import com.rebin.booking.reservation.dto.request.TimeSlotResponse;
+import com.rebin.booking.reservation.dto.response.TimeSlotResponse;
 import com.rebin.booking.reservation.service.TimeSlotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

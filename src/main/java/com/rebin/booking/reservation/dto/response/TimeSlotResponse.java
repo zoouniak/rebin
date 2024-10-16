@@ -1,4 +1,4 @@
-package com.rebin.booking.reservation.dto.request;
+package com.rebin.booking.reservation.dto.response;
 
 import com.rebin.booking.reservation.domain.TimeSlot;
 

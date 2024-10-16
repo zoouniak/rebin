@@ -2,7 +2,7 @@ package com.rebin.booking.reservation.service;
 
 import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.TimeSlotRepository;
-import com.rebin.booking.reservation.dto.request.TimeSlotResponse;
+import com.rebin.booking.reservation.dto.response.TimeSlotResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
