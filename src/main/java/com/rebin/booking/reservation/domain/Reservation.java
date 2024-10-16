@@ -5,7 +5,10 @@ import com.rebin.booking.member.domain.Member;
 import com.rebin.booking.product.domain.Product;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -14,6 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -45,6 +49,9 @@ public class Reservation extends BaseTimeEntity {
     private boolean isAgreeUpload;
 
     @Column
+    private boolean isAgreePrivacyPolicy;
+
+    @Column
     private int peopleCnt;
 
     @Column(length = 2000)
@@ -53,5 +60,18 @@ public class Reservation extends BaseTimeEntity {
     @Column
     private int price;
 
-
+    @Builder
+    public Reservation(Product product, Member member, TimeSlot timeSlot, String code, ReservationStatusType status, LocalDate shootDate, boolean isAgreeUpload, boolean isAgreePrivacyPolicy,int peopleCnt, String notes, int price) {
+        this.product = product;
+        this.member = member;
+        this.timeSlot = timeSlot;
+        this.code = code;
+        this.status = status;
+        this.shootDate = shootDate;
+        this.isAgreeUpload = isAgreeUpload;
+        this.isAgreePrivacyPolicy = isAgreePrivacyPolicy;
+        this.peopleCnt = peopleCnt;
+        this.notes = notes;
+        this.price = price;
+    }
 }
