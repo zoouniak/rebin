@@ -28,9 +28,10 @@ public class ReservationService {
     private final ProductRepository productRepository;
     private final ReservationCodeService reservationCodeService;
 
+    private static final int ATTEMPT_CNT = 10;
+
     @Transactional
     public ReservationResponse reserve(Long memberId, ReservationRequest request) {
-        System.out.println(memberId);
         Member member = findMemberWithIdAndEmail(memberId, request.email());
         Product product = findProduct(request.productId());
         TimeSlot timeSlot = findTimeSlot(request.timeSlotId());
@@ -55,12 +56,14 @@ public class ReservationService {
 
     private String generateUniqueReservationCode() {
         String generateCode;
-        do {
+        for(int i=0;i<ATTEMPT_CNT;i++){
             generateCode = ReservationCodeGenerator.generateCode();
 
-        } while (!reservationCodeService.isCodeUnique(generateCode));
-
-        return generateCode;
+            if(reservationCodeService.isCodeUnique(generateCode)){
+                return generateCode;
+            }
+        }
+        throw new ReservationException(MAX_ATTEMPTS_EXCEEDED);
     }
 
     private Member findMemberWithIdAndEmail(Long memberId, String email) {
