@@ -12,6 +12,7 @@ import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
+import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
 import com.rebin.booking.reservation.dto.response.ReservationResponse;
 import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
 import com.rebin.booking.reservation.service.strategy.ReservationFinders;
@@ -69,6 +70,11 @@ public class ReservationService {
         return strategy.getReservations(memberId);
     }
 
+    public ReservationDetailResponse getReservationDetail(final Long memberId, final Long reservationId) {
+        validReservationWithMember(memberId, reservationId);
+        return ReservationDetailResponse.of(findReservation(reservationId));
+    }
+
     private String generateUniqueReservationCode() {
         String generateCode;
         for (int i = 0; i < ATTEMPT_CNT; i++) {
@@ -94,5 +100,16 @@ public class ReservationService {
     private TimeSlot findTimeSlot(final Long timeSlotId) {
         return timeSlotRepository.findById(timeSlotId)
                 .orElseThrow(() -> new ReservationException(INVALID_TIMESLOT));
+    }
+
+    private Reservation findReservation(final Long reservationId) {
+        return reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationException(INVALID_RESERVATION));
+    }
+
+    private void validReservationWithMember(final Long memberId, final Long reservationId) {
+        if (!reservationRepository.existsByMemberIdAndId(memberId, reservationId)) {
+            throw new ReservationException(INVALID_RESERVATION);
+        }
     }
 }

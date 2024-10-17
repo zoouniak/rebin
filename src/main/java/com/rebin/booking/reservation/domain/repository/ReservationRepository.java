@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     Optional<Reservation> findByCode(String code);
+    boolean existsByMemberIdAndId(Long memberId, Long reservationId);
     @Query("""
             select r from Reservation r where r.member.id=:memberId 
             and r.status = 'PAID' or r.status = 'PENDING'
