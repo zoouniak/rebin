@@ -54,6 +54,7 @@ public class ReservationService {
                 .status(ReservationStatusType.PENDING)
                 .isAgreeUpload(request.agreeToInstaUpload())
                 .isAgreePrivacyPolicy(request.agreeToPrivacyPolicy())
+                .shootDate(timeSlot.getDate())
                 .peopleCnt(request.peopleCnt())
                 .notes(request.notes())
                 .price(request.price())
