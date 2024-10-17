@@ -12,7 +12,7 @@ import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
-import com.rebin.booking.reservation.dto.response.ReservationResponse;
+import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,7 +63,7 @@ class ReservationServiceTest {
 
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
         // when
-        ReservationResponse reserve = reservationService.reserve(1L, req);
+        ReservationSaveResponse reserve = reservationService.reserve(1L, req);
 
         // then
         Assertions.assertEquals(reservationCode(), reserve.code());
