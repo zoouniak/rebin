@@ -11,11 +11,17 @@ import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
+import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
 import com.rebin.booking.reservation.dto.response.ReservationResponse;
+import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
+import com.rebin.booking.reservation.service.strategy.ReservationFinders;
+import com.rebin.booking.reservation.service.strategy.ReservationFinder;
 import com.rebin.booking.reservation.util.ReservationCodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.rebin.booking.common.excpetion.ErrorCode.*;
 
@@ -27,11 +33,12 @@ public class ReservationService {
     private final TimeSlotRepository timeSlotRepository;
     private final ProductRepository productRepository;
     private final ReservationCodeService reservationCodeService;
+    private final ReservationFinders reservationFinders;
 
     private static final int ATTEMPT_CNT = 10;
 
     @Transactional
-    public ReservationResponse reserve(final Long memberId, final ReservationRequest request) {
+    public ReservationSaveResponse reserve(final Long memberId, final ReservationRequest request) {
         Member member = findMemberWithIdAndEmail(memberId, request.email());
         Product product = findProduct(request.productId());
         TimeSlot timeSlot = findTimeSlot(request.timeSlotId());
@@ -53,7 +60,12 @@ public class ReservationService {
                 .build();
 
         Reservation save = reservationRepository.save(reservation);
-        return new ReservationResponse(save.getCode());
+        return new ReservationSaveResponse(save.getCode());
+    }
+
+    public List<ReservationResponse> getReservationsByStatus(final Long memberId, final ReservationLookUpRequest status) {
+        ReservationFinder strategy = reservationFinders.mapping(status);
+        return strategy.getReservations(memberId);
     }
 
     private String generateUniqueReservationCode() {

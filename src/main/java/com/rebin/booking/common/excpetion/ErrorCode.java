@@ -17,7 +17,8 @@ public enum ErrorCode {
     INVALID_PRODUCT(400, "P001", "err.invalid.product"),
     INVALID_TIMESLOT(400, "T001", "err.invalid.timeslot"),
     MAX_ATTEMPTS_EXCEEDED(500, "R001", "err.fail.reservation-code"),
-    RESERVATION_FULL(400,"R002","err.already-full.timeslot");
+    RESERVATION_FULL(400,"R002","err.already-full.timeslot"),
+    NOT_SUPPORT_STATUS(400,"R003","err.invalid.status");
     private final int status;
     private final String code;
     private final String msg;
