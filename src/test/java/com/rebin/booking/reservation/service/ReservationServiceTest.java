@@ -11,8 +11,15 @@ import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
+import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
+import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
+import com.rebin.booking.reservation.dto.response.ReservationResponse;
 import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
+import com.rebin.booking.reservation.service.strategy.ReservationFinders;
+import com.rebin.booking.reservation.service.strategy.ShootAfterReservationFinder;
+import com.rebin.booking.reservation.service.strategy.ShootBeforeReservationFinder;
+import com.rebin.booking.reservation.service.strategy.ShootCanceledReservationFinder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +30,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.rebin.booking.reservation.domain.type.ReservationStatusType.*;
+import static com.rebin.booking.reservation.dto.request.ReservationLookUpRequest.AFTER;
+import static com.rebin.booking.reservation.dto.request.ReservationLookUpRequest.BEFORE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
@@ -45,6 +56,8 @@ class ReservationServiceTest {
     private ProductRepository productRepository;
     @Mock
     private ReservationCodeService reservationCodeService;
+    @Mock
+    private ReservationFinders reservationFinders;
 
     @Test
     void 예약_한다() {
@@ -59,7 +72,7 @@ class ReservationServiceTest {
         when(reservationCodeService.isCodeUnique(any())).thenReturn(true);
 
         ReservationRequest req = reservationRequest();
-        Reservation reservation = reservation();
+        Reservation reservation = reservation(PENDING);
 
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
         // when
@@ -88,6 +101,79 @@ class ReservationServiceTest {
         // when, then
         ReservationException exception = assertThrows(ReservationException.class, () -> reservationService.reserve(1L, req));
         Assertions.assertEquals("R002", exception.getCode());
+    }
+
+    @Test
+    void 촬영전_예약을_조회한다() {
+        // given
+        Reservation reservation = reservation(PENDING);
+        ReservationLookUpRequest req = BEFORE;
+        when(reservationFinders.mapping(req)).thenReturn(new ShootBeforeReservationFinder(reservationRepository));
+        when(reservationRepository.findAllBeforeShootByMemberId(any())).thenReturn(List.of(reservation));
+        // when
+        List<ReservationResponse> reservations = reservationService.getReservationsByStatus(reservation.getMember().getId(), req);
+
+        // then
+        assertEquals(1, reservations.size());  // 반환된 예약 리스트 크기 확인
+        verify(reservationRepository, times(1)).findAllBeforeShootByMemberId(any());
+    }
+
+    @Test
+    void 촬영후_예약을_조회한다() {
+        // given
+        Reservation reservation = reservation(COMPLETED);
+        ReservationLookUpRequest req = AFTER;
+        when(reservationFinders.mapping(req)).thenReturn(new ShootAfterReservationFinder(reservationRepository));
+        when(reservationRepository.findAllAfterShootByMemberId(any())).thenReturn(List.of(reservation));
+        // when
+        List<ReservationResponse> reservations = reservationService.getReservationsByStatus(reservation.getMember().getId(), req);
+
+        // then
+        assertEquals(1, reservations.size());  // 반환된 예약 리스트 크기 확인
+        verify(reservationRepository, times(1)).findAllAfterShootByMemberId(any());
+    }
+
+    @Test
+    void 촬영취소_예약을_조회한다() {
+        // given
+        Reservation reservation = reservation(CANCELED);
+        ReservationLookUpRequest req = ReservationLookUpRequest.CANCELED;
+        when(reservationFinders.mapping(req)).thenReturn(new ShootCanceledReservationFinder(reservationRepository));
+        when(reservationRepository.findAllCanceledShootByMemberId(any())).thenReturn(List.of(reservation));
+        // when
+        List<ReservationResponse> reservations = reservationService.getReservationsByStatus(reservation.getMember().getId(), req);
+
+        // then
+        assertEquals(1, reservations.size());  // 반환된 예약 리스트 크기 확인
+        verify(reservationRepository, times(1)).findAllCanceledShootByMemberId(any());
+    }
+
+    @Test
+    void 예약_상세를_조회한다(){
+        // given
+        Reservation reservation = reservation(PENDING);
+        when(reservationRepository.existsByMemberIdAndId(any(),any())).thenReturn(true);
+        when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
+        // when
+        ReservationDetailResponse detail = reservationService.getReservationDetail(reservation.getMember().getId(), 1L);
+
+        // then
+        Assertions.assertEquals(reservation.getCode(), detail.code());
+        verify(reservationRepository,times(1)).findById(any());
+    }
+
+    @Test
+    void 잘못된예약번호로_조회하면_에러가_발생한다(){
+        // given
+        Reservation reservation = reservation(PENDING);
+        when(reservationRepository.existsByMemberIdAndId(any(),any())).thenReturn(false);
+
+        // when
+        ReservationException exception = assertThrows(ReservationException.class, () -> reservationService.getReservationDetail(reservation.getMember().getId(), 1L));
+
+        // then
+        Assertions.assertEquals("R004", exception.getCode());
+        verify(reservationRepository,times(0)).findById(any());
     }
 
     private static ReservationRequest reservationRequest() {
@@ -127,14 +213,14 @@ class ReservationServiceTest {
         return new Member("loginId", "email", ProviderType.KAKAO);
     }
 
-    private static Reservation reservation() {
+    private static Reservation reservation(ReservationStatusType statusType) {
         ReservationRequest req = reservationRequest();
         return Reservation.builder()
                 .product(product())
                 .member(member())
                 .timeSlot(timeSlot())
                 .code(reservationCode())
-                .status(ReservationStatusType.PENDING)
+                .status(statusType)
                 .isAgreeUpload(req.agreeToInstaUpload())
                 .isAgreePrivacyPolicy(req.agreeToPrivacyPolicy())
                 .peopleCnt(req.peopleCnt())
