@@ -38,4 +38,12 @@ public class ReservationController {
                                                                     @PathVariable(value = "reservationId") Long reservationId) {
         return ResponseEntity.ok(reservationService.getReservationDetail(accessor.getMemberId(), reservationId));
     }
+
+    @PatchMapping("/{reservationId}")
+    public ResponseEntity<Void> cancelReservation(@Auth Accessor accessor,
+                                                  @PathVariable(value = "reservationId") Long reservationId) {
+        reservationService.cancelReservation(accessor.getMemberId(), reservationId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

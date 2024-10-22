@@ -19,7 +19,8 @@ public enum ErrorCode {
     MAX_ATTEMPTS_EXCEEDED(500, "R001", "err.fail.reservation-code"),
     RESERVATION_FULL(400, "R002", "err.already-full.timeslot"),
     NOT_SUPPORT_STATUS(400, "R003", "err.invalid.status"),
-    INVALID_RESERVATION(400, "R004", "err.invalid.reservation");
+    INVALID_RESERVATION(400, "R004", "err.invalid.reservation"),
+    CANT_CANCEL(400,"R005","err.fail-cancel.reservation");
     private final int status;
     private final String code;
     private final String msg;

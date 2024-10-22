@@ -43,4 +43,8 @@ public class TimeSlot {
             throw new ReservationException(ErrorCode.RESERVATION_FULL);
         this.isAvailable = false;
     }
+
+    public void cancel() {
+        this.isAvailable = true;
+    }
 }

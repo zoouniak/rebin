@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+import static com.rebin.booking.reservation.domain.type.ReservationStatusType.CANCELED;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -61,7 +62,7 @@ public class Reservation extends BaseTimeEntity {
     private int price;
 
     @Builder
-    public Reservation(Product product, Member member, TimeSlot timeSlot, String code, ReservationStatusType status, LocalDate shootDate, boolean isAgreeUpload, boolean isAgreePrivacyPolicy,int peopleCnt, String notes, int price) {
+    public Reservation(Product product, Member member, TimeSlot timeSlot, String code, ReservationStatusType status, LocalDate shootDate, boolean isAgreeUpload, boolean isAgreePrivacyPolicy, int peopleCnt, String notes, int price) {
         this.product = product;
         this.member = member;
         this.timeSlot = timeSlot;
@@ -73,5 +74,9 @@ public class Reservation extends BaseTimeEntity {
         this.peopleCnt = peopleCnt;
         this.notes = notes;
         this.price = price;
+    }
+
+    public void cancel() {
+        this.status = CANCELED;
     }
 }

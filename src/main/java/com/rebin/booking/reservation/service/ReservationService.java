@@ -17,6 +17,7 @@ import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
 import com.rebin.booking.reservation.service.strategy.ReservationFinder;
 import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.util.ReservationCodeGenerator;
+import com.rebin.booking.reservation.validator.ReservationCancelValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +76,18 @@ public class ReservationService {
         return ReservationDetailResponse.of(findReservation(reservationId));
     }
 
+    @Transactional
+    public void cancelReservation(Long memberId, Long reservationId) {
+        validReservationWithMember(memberId, reservationId);
+
+        Reservation reservation = findReservation(reservationId);
+        if(!ReservationCancelValidator.canCancelReservation(reservation.getShootDate()))
+            throw new ReservationException(CANT_CANCEL);
+
+        reservation.cancel();
+        reservation.getTimeSlot().cancel();
+    }
+
     private String generateUniqueReservationCode() {
         String generateCode;
         for (int i = 0; i < ATTEMPT_CNT; i++) {
@@ -112,4 +125,6 @@ public class ReservationService {
             throw new ReservationException(INVALID_RESERVATION);
         }
     }
+
+
 }
