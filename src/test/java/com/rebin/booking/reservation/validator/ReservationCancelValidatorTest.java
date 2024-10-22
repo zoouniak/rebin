@@ -35,7 +35,6 @@ class ReservationCancelValidatorTest {
     @Test
     void 이미_취소된_예약() {
         when(reservation.getStatus()).thenReturn(ReservationStatusType.CANCELED);
-        // when(reservation.getShootDate()).thenReturn(LocalDate.now().plusDays(10));
 
         boolean result = validator.canCancelReservation(reservation);
 
@@ -45,7 +44,6 @@ class ReservationCancelValidatorTest {
     @Test
     void 촬영완료된_예약() {
         when(reservation.getStatus()).thenReturn(ReservationStatusType.COMPLETED);
-        // when(reservation.getShootDate()).thenReturn(LocalDate.now().plusDays(10));
 
         boolean result = validator.canCancelReservation(reservation);
 
