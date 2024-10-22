@@ -81,7 +81,7 @@ public class ReservationService {
         validReservationWithMember(memberId, reservationId);
 
         Reservation reservation = findReservation(reservationId);
-        if(!ReservationCancelValidator.canCancelReservation(reservation.getShootDate()))
+        if(!ReservationCancelValidator.canCancelReservation(reservation))
             throw new ReservationException(CANT_CANCEL);
 
         reservation.cancel();
