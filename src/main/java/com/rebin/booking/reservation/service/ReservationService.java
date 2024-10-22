@@ -36,6 +36,7 @@ public class ReservationService {
     private final ProductRepository productRepository;
     private final ReservationCodeService reservationCodeService;
     private final ReservationFinders reservationFinders;
+    private final ReservationCancelValidator cancelValidator;
 
     private static final int ATTEMPT_CNT = 10;
 
@@ -81,7 +82,7 @@ public class ReservationService {
         validReservationWithMember(memberId, reservationId);
 
         Reservation reservation = findReservation(reservationId);
-        if(!ReservationCancelValidator.canCancelReservation(reservation))
+        if(!cancelValidator.canCancelReservation(reservation))
             throw new ReservationException(CANT_CANCEL);
 
         reservation.cancel();
