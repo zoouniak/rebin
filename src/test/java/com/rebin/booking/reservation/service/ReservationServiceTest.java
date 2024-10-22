@@ -72,7 +72,7 @@ class ReservationServiceTest {
         when(reservationCodeService.isCodeUnique(any())).thenReturn(true);
 
         ReservationRequest req = reservationRequest();
-        Reservation reservation = reservation(PENDING);
+        Reservation reservation = reservation(PENDING_PAYMENT);
 
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
         // when
@@ -106,7 +106,7 @@ class ReservationServiceTest {
     @Test
     void 촬영전_예약을_조회한다() {
         // given
-        Reservation reservation = reservation(PENDING);
+        Reservation reservation = reservation(PENDING_PAYMENT);
         ReservationLookUpRequest req = BEFORE;
         when(reservationFinders.mapping(req)).thenReturn(new ShootBeforeReservationFinder(reservationRepository));
         when(reservationRepository.findAllBeforeShootByMemberId(any())).thenReturn(List.of(reservation));
@@ -151,7 +151,7 @@ class ReservationServiceTest {
     @Test
     void 예약_상세를_조회한다(){
         // given
-        Reservation reservation = reservation(PENDING);
+        Reservation reservation = reservation(PENDING_PAYMENT);
         when(reservationRepository.existsByMemberIdAndId(any(),any())).thenReturn(true);
         when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
         // when
@@ -165,7 +165,7 @@ class ReservationServiceTest {
     @Test
     void 잘못된예약번호로_조회하면_에러가_발생한다(){
         // given
-        Reservation reservation = reservation(PENDING);
+        Reservation reservation = reservation(PENDING_PAYMENT);
         when(reservationRepository.existsByMemberIdAndId(any(),any())).thenReturn(false);
 
         // when

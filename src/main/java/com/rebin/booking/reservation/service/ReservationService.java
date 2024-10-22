@@ -9,14 +9,13 @@ import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
-import com.rebin.booking.reservation.domain.type.ReservationStatusType;
-import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
+import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
 import com.rebin.booking.reservation.dto.response.ReservationResponse;
 import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
-import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.service.strategy.ReservationFinder;
+import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.util.ReservationCodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.rebin.booking.common.excpetion.ErrorCode.*;
+import static com.rebin.booking.reservation.domain.type.ReservationStatusType.PENDING_PAYMENT;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +52,7 @@ public class ReservationService {
                 .member(member)
                 .timeSlot(timeSlot)
                 .code(code)
-                .status(ReservationStatusType.PENDING)
+                .status(PENDING_PAYMENT)
                 .isAgreeUpload(request.agreeToInstaUpload())
                 .isAgreePrivacyPolicy(request.agreeToPrivacyPolicy())
                 .shootDate(timeSlot.getDate())
