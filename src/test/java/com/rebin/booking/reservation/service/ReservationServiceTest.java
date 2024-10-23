@@ -204,6 +204,17 @@ class ReservationServiceTest {
         Assertions.assertEquals("R005", reservationException.getCode());
     }
 
+    @Test
+    void 예약금_입금확인_요청을_보낸다() {
+        Reservation reservation = reservation(PENDING_PAYMENT);
+        when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(true);
+        when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
+
+        reservationService.requestPaymentConfirmation(1L, 1L);
+
+        Assertions.assertEquals(CONFIRM_REQUESTED, reservation.getStatus());
+    }
+
     private static ReservationRequest reservationRequest() {
         return new ReservationRequest(
                 "name",
