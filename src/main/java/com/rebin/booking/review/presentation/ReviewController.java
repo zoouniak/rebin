@@ -8,6 +8,7 @@ import com.rebin.booking.review.dto.request.ReviewEditRequest;
 import com.rebin.booking.review.dto.response.ReviewCreateResponse;
 import com.rebin.booking.review.dto.response.ReviewResponse;
 import com.rebin.booking.review.service.ReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class ReviewController {
     @PostMapping
     @MemberOnly
     public ResponseEntity<ReviewCreateResponse> createReview(@Auth Accessor accessor,
-                                                             @RequestBody ReviewCreateRequest request) {
+                                                             @RequestBody @Valid ReviewCreateRequest request) {
         return ResponseEntity.ok(reviewService.createReview(accessor.getMemberId(), request));
     }
 
@@ -35,7 +36,7 @@ public class ReviewController {
     @MemberOnly
     public ResponseEntity<Void> editReview(@Auth Accessor accessor,
                                            @PathVariable(value = "reviewId") Long reviewId,
-                                           @RequestBody ReviewEditRequest request) {
+                                           @RequestBody @Valid ReviewEditRequest request) {
         reviewService.editReview(accessor.getMemberId(), reviewId, request.content());
         return ResponseEntity.noContent().build();
     }
