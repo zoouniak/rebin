@@ -46,4 +46,11 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{reservationId}/payment")
+    public ResponseEntity<Void> requestPaymentConfirmation(@Auth Accessor accessor,
+                                              @PathVariable(value = "reservationId") Long reservationId) {
+        reservationService.requestPaymentConfirmation(accessor.getMemberId(), reservationId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

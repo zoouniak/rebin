@@ -82,12 +82,22 @@ public class ReservationService {
         validReservationWithMember(memberId, reservationId);
 
         Reservation reservation = findReservation(reservationId);
-        if(!cancelValidator.canCancelReservation(reservation))
+        if (!cancelValidator.canCancelReservation(reservation))
             throw new ReservationException(CANT_CANCEL);
 
         reservation.cancel();
         reservation.getTimeSlot().cancel();
     }
+
+    @Transactional
+    public void requestPaymentConfirmation(Long memberId, Long reservationId) {
+        validReservationWithMember(memberId, reservationId);
+        Reservation reservation = findReservation(reservationId);
+        reservation.sendPaymentRequest();
+
+        // todo 관리자에게 이메일 전송?
+    }
+
 
     private String generateUniqueReservationCode() {
         String generateCode;
@@ -126,6 +136,4 @@ public class ReservationService {
             throw new ReservationException(INVALID_RESERVATION);
         }
     }
-
-
 }
