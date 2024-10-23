@@ -45,7 +45,7 @@ public class ReviewController {
     @MemberOnly
     public ResponseEntity<Void> deleteReview(@Auth Accessor accessor,
                                              @PathVariable(value = "reviewId") Long reviewId){
-        reviewService.deleteReview(reviewId);
+        reviewService.deleteReview(accessor.getMemberId(), reviewId);
         return ResponseEntity.noContent().build();
     }
 
