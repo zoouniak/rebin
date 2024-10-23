@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -49,6 +50,10 @@ public class Review extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "review", cascade = REMOVE)
     private List<Comment> comments;
+
+    @Column
+    @ColumnDefault(value = "false")
+    private boolean deleted = false;
 
     @Builder
     public Review(Reservation reservation, Member member, String content) {
