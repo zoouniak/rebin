@@ -54,4 +54,8 @@ public class Review extends BaseTimeEntity {
         this.product = reservation.getProduct();
         this.content = content;
     }
+
+    public void editContent(String content) {
+        this.content = content;
+    }
 }

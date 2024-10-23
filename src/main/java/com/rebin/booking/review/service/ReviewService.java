@@ -69,6 +69,14 @@ public class ReviewService {
         return ReviewResponse.of(review, helpCnt, isHelped);
     }
 
+    @Transactional
+    public void editReview(Long memberId, Long reviewId, String content) {
+        validReviewWithMember(memberId, reviewId);
+        Review review = findReview(reviewId);
+
+        review.editContent(content);
+    }
+
     private boolean isHelped(Long memberId, Review review) {
         return reviewHelpRepository.existsByMemberIdAndReviewId(memberId, review.getId());
     }
@@ -91,5 +99,8 @@ public class ReviewService {
                 .orElseThrow(() -> new ReviewException(INVALID_AUTHORITY));
     }
 
-
+    private void validReviewWithMember(Long memberId, Long reviewId) {
+        if(!reviewRepository.existsByIdAndMemberId(reviewId, memberId))
+            throw new ReviewException(INVALID_REVIEW);
+    }
 }
