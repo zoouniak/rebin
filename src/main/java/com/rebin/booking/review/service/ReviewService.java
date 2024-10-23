@@ -31,8 +31,8 @@ public class ReviewService {
     public List<ReviewResponse> getReviewsByProduct(final Long memberId, final Long productId, final Pageable pageable) {
         return reviewRepository.findByProductIdAndPageable(productId, pageable).stream()
                 .map(review -> {
-                    int helpCnt = reviewHelpRepository.countByReviewId(review.getId());
-                    boolean isHelped = reviewHelpRepository.existsByMemberIdAndReviewId(memberId, review.getId());
+                    int helpCnt = getHelpCnt(review);
+                    boolean isHelped = isHelped(memberId, review);
                     int commentCnt = review.getComments().size();
                     return new ReviewResponse(
                             review.getId(),
@@ -47,7 +47,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewCreateResponse createReview(Long memberId, ReviewCreateRequest request) {
+    public ReviewCreateResponse createReview(final Long memberId, final ReviewCreateRequest request) {
         if (reviewRepository.existsByReservationId(request.reservationId()))
             throw new ReviewException(ALREADY_WRITE);
 
@@ -62,13 +62,34 @@ public class ReviewService {
         return new ReviewCreateResponse(save.getId());
     }
 
-    private Reservation findReservation(Long reservationId) {
+    public ReviewResponse getReview(final Long memberId, final Long reviewId) {
+        Review review = findReview(reviewId);
+        int helpCnt = getHelpCnt(review);
+        boolean isHelped = isHelped(memberId, review);
+        return ReviewResponse.of(review, helpCnt, isHelped);
+    }
+
+    private boolean isHelped(Long memberId, Review review) {
+        return reviewHelpRepository.existsByMemberIdAndReviewId(memberId, review.getId());
+    }
+
+    private int getHelpCnt(Review review) {
+        return reviewHelpRepository.countByReviewId(review.getId());
+    }
+
+    private Review findReview(Long reviewId) {
+        return reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewException(INVALID_REVIEW));
+    }
+
+    private Reservation findReservation(final Long reservationId) {
         return reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReviewException(INVALID_RESERVATION));
     }
 
-    private Member findMember(Long memberId) {
+    private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ReviewException(INVALID_AUTHORITY));
     }
+
+
 }

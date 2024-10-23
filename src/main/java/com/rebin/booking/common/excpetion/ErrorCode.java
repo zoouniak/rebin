@@ -21,7 +21,8 @@ public enum ErrorCode {
     NOT_SUPPORT_STATUS(400, "R003", "err.invalid.status"),
     INVALID_RESERVATION(400, "R004", "err.invalid.reservation"),
     CANT_CANCEL(400,"R005","err.fail-cancel.reservation"),
-    ALREADY_WRITE(400,"RE001","err.already-write.review");
+    ALREADY_WRITE(400,"V001","err.already-write.review"),
+    INVALID_REVIEW(400,"V002","err.invalid.review");
     private final int status;
     private final String code;
     private final String msg;
