@@ -20,7 +20,8 @@ public enum ErrorCode {
     RESERVATION_FULL(400, "R002", "err.already-full.timeslot"),
     NOT_SUPPORT_STATUS(400, "R003", "err.invalid.status"),
     INVALID_RESERVATION(400, "R004", "err.invalid.reservation"),
-    CANT_CANCEL(400,"R005","err.fail-cancel.reservation");
+    CANT_CANCEL(400,"R005","err.fail-cancel.reservation"),
+    ALREADY_WRITE(400,"RE001","err.already-write.review");
     private final int status;
     private final String code;
     private final String msg;

@@ -17,4 +17,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             """)
     List<Review> findByProductIdAndPageable(@Param(value = "productId") Long productId, Pageable pageable);
 
+    boolean existsByReservationId(Long reservationId);
 }
