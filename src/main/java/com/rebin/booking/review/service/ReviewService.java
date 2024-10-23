@@ -70,22 +70,27 @@ public class ReviewService {
     }
 
     @Transactional
-    public void editReview(Long memberId, Long reviewId, String content) {
+    public void editReview(final Long memberId, final Long reviewId, final String content) {
         validReviewWithMember(memberId, reviewId);
         Review review = findReview(reviewId);
 
         review.editContent(content);
     }
 
-    private boolean isHelped(Long memberId, Review review) {
+    @Transactional
+    public void deleteReview(final Long reviewId) {
+        reviewRepository.deleteById(reviewId);
+    }
+
+    private boolean isHelped(final Long memberId, final Review review) {
         return reviewHelpRepository.existsByMemberIdAndReviewId(memberId, review.getId());
     }
 
-    private int getHelpCnt(Review review) {
+    private int getHelpCnt(final Review review) {
         return reviewHelpRepository.countByReviewId(review.getId());
     }
 
-    private Review findReview(Long reviewId) {
+    private Review findReview(final Long reviewId) {
         return reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewException(INVALID_REVIEW));
     }
 
@@ -99,8 +104,10 @@ public class ReviewService {
                 .orElseThrow(() -> new ReviewException(INVALID_AUTHORITY));
     }
 
-    private void validReviewWithMember(Long memberId, Long reviewId) {
-        if(!reviewRepository.existsByIdAndMemberId(reviewId, memberId))
+    private void validReviewWithMember(final Long memberId, final Long reviewId) {
+        if (!reviewRepository.existsByIdAndMemberId(reviewId, memberId))
             throw new ReviewException(INVALID_REVIEW);
     }
+
+
 }
