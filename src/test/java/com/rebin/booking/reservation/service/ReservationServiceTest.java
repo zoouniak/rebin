@@ -20,6 +20,7 @@ import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.service.strategy.ShootAfterReservationFinder;
 import com.rebin.booking.reservation.service.strategy.ShootBeforeReservationFinder;
 import com.rebin.booking.reservation.service.strategy.ShootCanceledReservationFinder;
+import com.rebin.booking.reservation.validator.ReservationCancelValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,6 +59,8 @@ class ReservationServiceTest {
     private ReservationCodeService reservationCodeService;
     @Mock
     private ReservationFinders reservationFinders;
+    @Mock
+    private ReservationCancelValidator cancelValidator;
 
     @Test
     void 예약_한다() {
@@ -72,7 +75,7 @@ class ReservationServiceTest {
         when(reservationCodeService.isCodeUnique(any())).thenReturn(true);
 
         ReservationRequest req = reservationRequest();
-        Reservation reservation = reservation(PENDING);
+        Reservation reservation = reservation(PENDING_PAYMENT);
 
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
         // when
@@ -106,7 +109,7 @@ class ReservationServiceTest {
     @Test
     void 촬영전_예약을_조회한다() {
         // given
-        Reservation reservation = reservation(PENDING);
+        Reservation reservation = reservation(PENDING_PAYMENT);
         ReservationLookUpRequest req = BEFORE;
         when(reservationFinders.mapping(req)).thenReturn(new ShootBeforeReservationFinder(reservationRepository));
         when(reservationRepository.findAllBeforeShootByMemberId(any())).thenReturn(List.of(reservation));
@@ -149,31 +152,67 @@ class ReservationServiceTest {
     }
 
     @Test
-    void 예약_상세를_조회한다(){
+    void 예약_상세를_조회한다() {
         // given
-        Reservation reservation = reservation(PENDING);
-        when(reservationRepository.existsByMemberIdAndId(any(),any())).thenReturn(true);
+        Reservation reservation = reservation(PENDING_PAYMENT);
+        when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(true);
         when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
         // when
         ReservationDetailResponse detail = reservationService.getReservationDetail(reservation.getMember().getId(), 1L);
 
         // then
         Assertions.assertEquals(reservation.getCode(), detail.code());
-        verify(reservationRepository,times(1)).findById(any());
+        verify(reservationRepository, times(1)).findById(any());
     }
 
     @Test
-    void 잘못된예약번호로_조회하면_에러가_발생한다(){
+    void 잘못된예약번호로_조회하면_에러가_발생한다() {
         // given
-        Reservation reservation = reservation(PENDING);
-        when(reservationRepository.existsByMemberIdAndId(any(),any())).thenReturn(false);
+        Reservation reservation = reservation(PENDING_PAYMENT);
+        when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(false);
 
         // when
         ReservationException exception = assertThrows(ReservationException.class, () -> reservationService.getReservationDetail(reservation.getMember().getId(), 1L));
 
         // then
         Assertions.assertEquals("R004", exception.getCode());
-        verify(reservationRepository,times(0)).findById(any());
+        verify(reservationRepository, times(0)).findById(any());
+    }
+
+    @Test
+    void 예약을_취소한다() {
+        Reservation reservation = reservation(PENDING_PAYMENT);
+        when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(true);
+        when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
+        when(cancelValidator.canCancelReservation(any())).thenReturn(true);
+
+        reservationService.cancelReservation(1L, 1L);
+
+        Assertions.assertEquals(CANCELED, reservation.getStatus());
+        Assertions.assertTrue(reservation.getTimeSlot().isAvailable());
+    }
+
+    @Test
+    void 취소가_불가능한_예약을_취소한다() {
+        Reservation reservation = reservation(COMPLETED);
+        when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(true);
+        when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
+        when(cancelValidator.canCancelReservation(any())).thenReturn(false);
+
+        ReservationException reservationException = assertThrows(ReservationException.class, () -> reservationService.cancelReservation(1L, 1L));
+
+        Assertions.assertEquals("R005", reservationException.getCode());
+    }
+
+    @Test
+    void 예약금_입금확인_요청을_보낸다() {
+        Reservation reservation = reservation(PENDING_PAYMENT);
+        when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(true);
+        when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
+
+        reservationService.requestPaymentConfirmation(1L, 1L);
+
+        Assertions.assertEquals(CONFIRM_REQUESTED, reservation.getStatus());
     }
 
     private static ReservationRequest reservationRequest() {
@@ -215,12 +254,14 @@ class ReservationServiceTest {
 
     private static Reservation reservation(ReservationStatusType statusType) {
         ReservationRequest req = reservationRequest();
+        TimeSlot timeSlot = timeSlot();
         return Reservation.builder()
                 .product(product())
                 .member(member())
-                .timeSlot(timeSlot())
+                .timeSlot(timeSlot)
                 .code(reservationCode())
                 .status(statusType)
+                .shootDate(timeSlot.getDate())
                 .isAgreeUpload(req.agreeToInstaUpload())
                 .isAgreePrivacyPolicy(req.agreeToPrivacyPolicy())
                 .peopleCnt(req.peopleCnt())

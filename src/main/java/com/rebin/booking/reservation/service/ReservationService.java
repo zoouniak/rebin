@@ -9,15 +9,15 @@ import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
-import com.rebin.booking.reservation.domain.type.ReservationStatusType;
-import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
+import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
 import com.rebin.booking.reservation.dto.response.ReservationResponse;
 import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
-import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.service.strategy.ReservationFinder;
+import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.util.ReservationCodeGenerator;
+import com.rebin.booking.reservation.validator.ReservationCancelValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.rebin.booking.common.excpetion.ErrorCode.*;
+import static com.rebin.booking.reservation.domain.type.ReservationStatusType.PENDING_PAYMENT;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class ReservationService {
     private final ProductRepository productRepository;
     private final ReservationCodeService reservationCodeService;
     private final ReservationFinders reservationFinders;
+    private final ReservationCancelValidator cancelValidator;
 
     private static final int ATTEMPT_CNT = 10;
 
@@ -52,7 +54,7 @@ public class ReservationService {
                 .member(member)
                 .timeSlot(timeSlot)
                 .code(code)
-                .status(ReservationStatusType.PENDING)
+                .status(PENDING_PAYMENT)
                 .isAgreeUpload(request.agreeToInstaUpload())
                 .isAgreePrivacyPolicy(request.agreeToPrivacyPolicy())
                 .shootDate(timeSlot.getDate())
@@ -74,6 +76,28 @@ public class ReservationService {
         validReservationWithMember(memberId, reservationId);
         return ReservationDetailResponse.of(findReservation(reservationId));
     }
+
+    @Transactional
+    public void cancelReservation(Long memberId, Long reservationId) {
+        validReservationWithMember(memberId, reservationId);
+
+        Reservation reservation = findReservation(reservationId);
+        if (!cancelValidator.canCancelReservation(reservation))
+            throw new ReservationException(CANT_CANCEL);
+
+        reservation.cancel();
+        reservation.getTimeSlot().cancel();
+    }
+
+    @Transactional
+    public void requestPaymentConfirmation(Long memberId, Long reservationId) {
+        validReservationWithMember(memberId, reservationId);
+        Reservation reservation = findReservation(reservationId);
+        reservation.sendPaymentRequest();
+
+        // todo 관리자에게 이메일 전송?
+    }
+
 
     private String generateUniqueReservationCode() {
         String generateCode;

@@ -12,7 +12,7 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     boolean existsByMemberIdAndId(Long memberId, Long reservationId);
     @Query("""
             select r from Reservation r where r.member.id=:memberId 
-            and r.status = 'PAID' or r.status = 'PENDING'
+            and (r.status = 'CONFIRM_REQUESTED' or r.status = 'PENDING_PAYMENT'or r.status = 'PAYMENT_CONFIRMED')
             """)
     List<Reservation> findAllBeforeShootByMemberId(Long memberId);
 
