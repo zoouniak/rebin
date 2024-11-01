@@ -6,12 +6,15 @@ import com.rebin.booking.auth.domain.MemberOnly;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
 import com.rebin.booking.review.dto.request.ReviewEditRequest;
 import com.rebin.booking.review.dto.response.ReviewCreateResponse;
+import com.rebin.booking.review.dto.response.ReviewDetailResponse;
 import com.rebin.booking.review.dto.response.ReviewResponse;
 import com.rebin.booking.review.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,6 +50,12 @@ public class ReviewController {
                                              @PathVariable(value = "reviewId") Long reviewId){
         reviewService.deleteReview(accessor.getMemberId(), reviewId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/my")
+    @MemberOnly
+    public ResponseEntity<List<ReviewDetailResponse>> getReviewByMember(@Auth Accessor accessor){
+        return ResponseEntity.ok(reviewService.getReviewByMember(accessor.getMemberId()));
     }
 
 }
