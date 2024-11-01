@@ -67,6 +67,18 @@ public class ReviewService {
         return ReviewResponse.of(review, helpCnt, isHelped);
     }
 
+    public List<ReviewDetailResponse> getReviewByMember(final Long memberId) {
+        List<Review> reviews = reviewRepository.findAllByMemberId(memberId);
+        return reviews.stream().map(review -> {
+            int helpCnt = getHelpCnt(review);
+            boolean isHelped = isHelped(memberId, review);
+            return new ReviewDetailResponse(
+                    ReviewResponse.of(review,helpCnt,isHelped),
+                    ProductResponse.of(review.getProduct())
+            );
+        }).toList();
+    }
+
     @Transactional
     public void editReview(final Long memberId, final Long reviewId, final String content) {
         validReviewWithMember(memberId, reviewId);
@@ -106,20 +118,5 @@ public class ReviewService {
     private void validReviewWithMember(final Long memberId, final Long reviewId) {
         if (!reviewRepository.existsByIdAndMemberId(reviewId, memberId))
             throw new ReviewException(INVALID_REVIEW);
-    }
-
-
-    public List<ReviewDetailResponse> getReviewByMember(final Long memberId) {
-        List<Review> reviews = reviewRepository.findAllByMemberId(memberId);
-        // 상품 정보가 필요한데.. 흠.......
-        //각 리뷰마다 mapping후 한번 감싼다??
-        return reviews.stream().map(review -> {
-            int helpCnt = getHelpCnt(review);
-            boolean isHelped = isHelped(memberId, review);
-            return new ReviewDetailResponse(
-                    ReviewResponse.of(review,helpCnt,isHelped),
-                    ProductResponse.of(review.getProduct())
-            );
-        }).toList();
     }
 }
