@@ -3,6 +3,7 @@ package com.rebin.booking.review.service;
 import com.rebin.booking.common.excpetion.ReviewException;
 import com.rebin.booking.member.domain.Member;
 import com.rebin.booking.member.domain.repository.MemberRepository;
+import com.rebin.booking.product.dto.response.ProductResponse;
 import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.review.domain.Review;
@@ -10,6 +11,7 @@ import com.rebin.booking.review.domain.repository.ReviewHelpRepository;
 import com.rebin.booking.review.domain.repository.ReviewRepository;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
 import com.rebin.booking.review.dto.response.ReviewCreateResponse;
+import com.rebin.booking.review.dto.response.ReviewDetailResponse;
 import com.rebin.booking.review.dto.response.ReviewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -111,4 +113,17 @@ public class ReviewService {
     }
 
 
+    public List<ReviewDetailResponse> getReviewByMember(final Long memberId) {
+        List<Review> reviews = reviewRepository.findAllByMemberId(memberId);
+        // 상품 정보가 필요한데.. 흠.......
+        //각 리뷰마다 mapping후 한번 감싼다??
+        return reviews.stream().map(review -> {
+            int helpCnt = getHelpCnt(review);
+            boolean isHelped = isHelped(memberId, review);
+            return new ReviewDetailResponse(
+                    ReviewResponse.of(review,helpCnt,isHelped),
+                    ProductResponse.of(review.getProduct())
+            );
+        }).toList();
+    }
 }
