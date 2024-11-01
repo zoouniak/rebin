@@ -35,15 +35,11 @@ public class ReviewService {
                 .map(review -> {
                     int helpCnt = getHelpCnt(review);
                     boolean isHelped = isHelped(memberId, review);
-                    int commentCnt = review.getComments().size();
-                    return new ReviewResponse(
-                            review.getId(),
-                            review.getMember().getNickname(),
-                            review.getContent(),
-                            review.getShootDate(),
+
+                    return  ReviewResponse.of(
+                            review,
                             helpCnt,
-                            isHelped,
-                            commentCnt
+                            isHelped
                     );
                 }).toList();
     }
