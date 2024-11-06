@@ -6,10 +6,7 @@ import com.rebin.booking.product.service.ProductWriteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +20,12 @@ public class AdminProductController {
     @PostMapping
     public ResponseEntity<ProductCreateResponse> createProduct(@RequestBody @Valid ProductCreateRequest request) {
         return ResponseEntity.ok(productWriteService.createProduct(request));
+    }
+
+    @PutMapping("/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable Long productId,
+                                              @RequestBody @Valid ProductCreateRequest request) {
+        productWriteService.updateProduct(productId, request);
+        return ResponseEntity.noContent().build();
     }
 }
