@@ -26,7 +26,8 @@ public enum ErrorCode {
     INVALID_IMG_PATH("I001", "err.invalid.path"),
     INVALID_IMAGE("I002","err.invalid.image"),
     EXCEED_IMAGE_LIST_SIZE("I003","err.exceed.image-size"),
-    EMPTY_IMAGE_LIST("I004","err.empty.image-size");
+    EMPTY_IMAGE_LIST("I004","err.empty.image-size"),
+    INVALID_NOTICE("N001","err.invalid.notice");
 
     private final String code;
     private final String msg;
