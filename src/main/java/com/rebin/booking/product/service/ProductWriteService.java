@@ -5,7 +5,7 @@ import com.rebin.booking.common.excpetion.ProductException;
 import com.rebin.booking.image.domain.S3ImageEvent;
 import com.rebin.booking.product.domain.Product;
 import com.rebin.booking.product.domain.ProductImage;
-import com.rebin.booking.product.domain.repository.CustomRepositoryImpl;
+import com.rebin.booking.product.domain.repository.CustomProductRepository;
 import com.rebin.booking.product.domain.repository.ProductRepository;
 import com.rebin.booking.product.dto.request.ProductCreateRequest;
 import com.rebin.booking.product.dto.response.ProductCreateResponse;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductWriteService {
     private final ProductRepository productRepository;
-    private final CustomRepositoryImpl customProductRepository;
+    private final CustomProductRepository customProductRepository;
     private final ApplicationEventPublisher publisher;
 
     @Transactional
