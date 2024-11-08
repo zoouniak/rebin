@@ -62,6 +62,11 @@ public class ProductWriteService {
         productRepository.save(updatedProduct);
     }
 
+    @Transactional
+    public void deleteProduct(final Long productId) {
+        productRepository.deleteById(productId);
+    }
+
     private void updateImages(final List<ProductImage> oldImages, final List<String> newImageNames, Product product) {
         List<ProductImage> newImages = newImageNames.stream()
                 .map(imageName -> makeUpdatedImages(oldImages, imageName, product))
@@ -115,5 +120,6 @@ public class ProductWriteService {
                                 .build())
                 .toList();
     }
+
 
 }

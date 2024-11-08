@@ -28,4 +28,10 @@ public class AdminProductController {
         productWriteService.updateProduct(productId, request);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId){
+        productWriteService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
+    }
 }

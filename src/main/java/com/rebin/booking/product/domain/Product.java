@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,8 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @Entity
+@SQLDelete(sql = "update product set deleted = 1 where id = ?")
+@SQLRestriction("deleted = 0")
 @NoArgsConstructor(access = PROTECTED)
 public class Product extends BaseTimeEntity {
     @Id
