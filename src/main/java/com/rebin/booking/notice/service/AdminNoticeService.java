@@ -12,7 +12,7 @@ import static com.rebin.booking.common.excpetion.ErrorCode.INVALID_NOTICE;
 
 @Service
 @RequiredArgsConstructor
-public class NoticeService {
+public class AdminNoticeService {
     private final NoticeRepository noticeRepository;
 
     public NoticeResponse saveNotice(final NoticeRequest request) {
