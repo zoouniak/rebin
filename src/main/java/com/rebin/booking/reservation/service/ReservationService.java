@@ -43,6 +43,8 @@ public class ReservationService {
     @Transactional
     public ReservationSaveResponse reserve(final Long memberId, final ReservationRequest request) {
         Member member = findMemberWithIdAndEmail(memberId, request.email());
+        member.updateMemberIfNameOrPhoneMissing(request.name(),request.phone());
+
         Product product = findProduct(request.productId());
         TimeSlot timeSlot = findTimeSlot(request.timeSlotId());
         String code = generateUniqueReservationCode();

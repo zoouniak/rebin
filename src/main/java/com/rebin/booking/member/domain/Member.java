@@ -50,4 +50,11 @@ public class Member extends BaseTimeEntity {
     public void updateNickname(String newNickname){
         this.nickname = newNickname;
     }
+
+    public void updateMemberIfNameOrPhoneMissing(String name, String phone) {
+        if(this.name.isEmpty())
+            this.name= name;
+        if(this.phone.isEmpty())
+            this.phone = phone;
+    }
 }
