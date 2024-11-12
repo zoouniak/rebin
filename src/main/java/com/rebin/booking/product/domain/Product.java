@@ -2,10 +2,11 @@ package com.rebin.booking.product.domain;
 
 import com.rebin.booking.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,8 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @Entity
+@SQLDelete(sql = "update product set deleted = 1 where id = ?")
+@SQLRestriction("deleted = 0")
 @NoArgsConstructor(access = PROTECTED)
 public class Product extends BaseTimeEntity {
     @Id
@@ -46,7 +49,7 @@ public class Product extends BaseTimeEntity {
     private List<ProductImage> images = new ArrayList<>();
 
     @Builder
-    public Product(Long id, String name, int price, String summary, String description, String thumbnail, int extraPersonFee, String guideLine) {
+    public Product(Long id, String name, int price, String summary, String description, String thumbnail, int extraPersonFee, String guideLine,List<ProductImage> images) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -55,5 +58,6 @@ public class Product extends BaseTimeEntity {
         this.thumbnail = thumbnail;
         this.extraPersonFee = extraPersonFee;
         this.guideLine = guideLine;
+        this.images = images;
     }
 }
