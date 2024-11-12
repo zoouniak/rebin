@@ -36,6 +36,7 @@ public class LoginService {
         Member loginUser = findOrCreateUser(
                 userInfo.getLoginId(),
                 userInfo.getEmail(),
+                userInfo.getNickname(),
                 userInfo.getProvider()
         );
         // accesstoken, refreshtoken 발급
@@ -44,7 +45,6 @@ public class LoginService {
         refreshTokenRepository.save(new RefreshToken(loginTokens.refreshToken(), loginUser.getId()));
 
         return loginTokens;
-
     }
 
     public AccessTokenResponse extend(String authorizeHeader, String refreshTokenReq) {
@@ -72,12 +72,12 @@ public class LoginService {
         refreshTokenRepository.deleteById(refreshToken);
     }
 
-    private Member findOrCreateUser(final String loginId, final String email, ProviderType provider) {
+    private Member findOrCreateUser(final String loginId, final String email, final String nickname,ProviderType provider) {
         return memberRepository.findByLoginId(loginId)
-                .orElseGet(() -> createUser(loginId, email, provider));
+                .orElseGet(() -> createUser(loginId, email,nickname, provider));
     }
 
-    private Member createUser(final String loginId, final String email, ProviderType provider) {
-        return memberRepository.save(new Member(loginId, email, provider));
+    private Member createUser(final String loginId, final String email,final String nickname, ProviderType provider) {
+        return memberRepository.save(new Member(loginId, email,nickname, provider));
     }
 }

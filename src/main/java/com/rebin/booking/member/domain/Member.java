@@ -34,9 +34,10 @@ public class Member extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private ProviderType provider;
 
-    public Member(String loginId, String email, ProviderType provider) {
+    public Member(String loginId, String email, String nickname,ProviderType provider) {
         this.email = email;
         this.loginId = loginId;
+        this.nickname = nickname;
         this.provider = provider;
     }
 
