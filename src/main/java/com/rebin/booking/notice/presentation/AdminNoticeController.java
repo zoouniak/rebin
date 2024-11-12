@@ -19,11 +19,6 @@ public class AdminNoticeController {
         return ResponseEntity.ok(adminNoticeService.saveNotice(request));
     }
 
-    @GetMapping("/{noticeId}")
-    public ResponseEntity<NoticeResponse> getNotice(@PathVariable Long noticeId){
-        return ResponseEntity.ok(adminNoticeService.getNotice(noticeId));
-    }
-
     @PutMapping("/{noticeId}")
     public ResponseEntity<Void> updateNotice(@PathVariable Long noticeId,
                                              @RequestBody @Valid NoticeRequest request){

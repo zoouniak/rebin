@@ -21,12 +21,7 @@ public class AdminNoticeService {
                 .content(request.content())
                 .build();
         Notice save = noticeRepository.save(notice);
-        return NoticeResponse.of(save);
-    }
-
-    public NoticeResponse getNotice(final Long noticeId) {
-        Notice notice = findNotice(noticeId);
-        return NoticeResponse.of(notice);
+        return NoticeResponse.from(save);
     }
 
     public void updateNotice(final Long noticeId, final NoticeRequest request) {
@@ -47,6 +42,4 @@ public class AdminNoticeService {
         return noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new NoticeException(INVALID_NOTICE));
     }
-
-
 }
