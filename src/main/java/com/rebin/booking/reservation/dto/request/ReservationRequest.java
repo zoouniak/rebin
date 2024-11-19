@@ -20,9 +20,7 @@ public record ReservationRequest(
         @NotNull(message = "상품 id는 필수값입니다.")
         Long productId,
         @NotNull(message = "타임슬롯 id는 필수값입니다.")
-        Long timeSlotId,
-        @PositiveOrZero(message = "가격은 0원 이상이어야합니다.")
-        int price
+        Long timeSlotId
 
 ) {
 }

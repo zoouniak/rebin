@@ -17,6 +17,7 @@ import com.rebin.booking.reservation.dto.response.ReservationResponse;
 import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
 import com.rebin.booking.reservation.service.strategy.ReservationFinder;
 import com.rebin.booking.reservation.service.strategy.ReservationFinders;
+import com.rebin.booking.reservation.util.PriceCalculator;
 import com.rebin.booking.reservation.util.ReservationCodeGenerator;
 import com.rebin.booking.reservation.validator.ReservationCancelValidator;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class ReservationService {
     private final ReservationCodeService reservationCodeService;
     private final ReservationFinders reservationFinders;
     private final ReservationCancelValidator cancelValidator;
+    private final PriceCalculator calculator;
     private final ApplicationEventPublisher publisher;
 
     private static final int ATTEMPT_CNT = 10;
@@ -66,7 +68,7 @@ public class ReservationService {
                 .shootDate(timeSlot.getDate())
                 .peopleCnt(request.peopleCnt())
                 .notes(request.notes())
-                .price(request.price())
+                .price(calculator.calculatePrice(product.getPrice(), request.peopleCnt(), product.getAdditionalFee()))
                 .canChange(true)
                 .build();
 

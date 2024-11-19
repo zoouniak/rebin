@@ -20,6 +20,7 @@ import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.service.strategy.ShootAfterReservationFinder;
 import com.rebin.booking.reservation.service.strategy.ShootBeforeReservationFinder;
 import com.rebin.booking.reservation.service.strategy.ShootCanceledReservationFinder;
+import com.rebin.booking.reservation.util.PriceCalculator;
 import com.rebin.booking.reservation.validator.ReservationCancelValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -61,6 +63,11 @@ class ReservationServiceTest {
     private ReservationFinders reservationFinders;
     @Mock
     private ReservationCancelValidator cancelValidator;
+    @Mock
+    private ApplicationEventPublisher publisher;
+    @Mock
+    private PriceCalculator calculator;
+
 
     @Test
     void 예약_한다() {
@@ -225,8 +232,7 @@ class ReservationServiceTest {
                 true,
                 true,
                 1L,
-                1L,
-                10000
+                1L
         );
     }
 
@@ -267,7 +273,7 @@ class ReservationServiceTest {
                 .isAgreePrivacyPolicy(req.agreeToPrivacyPolicy())
                 .peopleCnt(req.peopleCnt())
                 .notes(req.notes())
-                .price(req.price())
+                .price(10_000)
                 .build();
     }
 
