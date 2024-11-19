@@ -6,6 +6,7 @@ import com.rebin.booking.member.domain.repository.MemberRepository;
 import com.rebin.booking.product.domain.Product;
 import com.rebin.booking.product.domain.repository.ProductRepository;
 import com.rebin.booking.reservation.domain.Reservation;
+import com.rebin.booking.reservation.domain.ReservationEvent;
 import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
@@ -19,6 +20,7 @@ import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.util.ReservationCodeGenerator;
 import com.rebin.booking.reservation.validator.ReservationCancelValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +39,7 @@ public class ReservationService {
     private final ReservationCodeService reservationCodeService;
     private final ReservationFinders reservationFinders;
     private final ReservationCancelValidator cancelValidator;
+    private final ApplicationEventPublisher publisher;
 
     private static final int ATTEMPT_CNT = 10;
 
@@ -66,6 +69,8 @@ public class ReservationService {
                 .build();
 
         Reservation save = reservationRepository.save(reservation);
+        //  todo 관리자한테 예약 이메일 전송
+        publisher.publishEvent(new ReservationEvent(reservation.getStatus(),reservation.getCode()));
         return new ReservationSaveResponse(save.getCode());
     }
 

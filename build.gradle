@@ -26,7 +26,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     // s3
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.715'
-
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
