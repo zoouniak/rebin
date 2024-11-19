@@ -24,6 +24,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.rebin.booking.common.excpetion.ErrorCode.*;
@@ -46,7 +47,7 @@ public class ReservationService {
     @Transactional
     public ReservationSaveResponse reserve(final Long memberId, final ReservationRequest request) {
         Member member = findMemberWithIdAndEmail(memberId, request.email());
-        member.updateMemberIfNameOrPhoneMissing(request.name(),request.phone());
+        member.updateMemberIfNameOrPhoneMissing(request.name(), request.phone());
 
         Product product = findProduct(request.productId());
         TimeSlot timeSlot = findTimeSlot(request.timeSlotId());
@@ -66,15 +67,19 @@ public class ReservationService {
                 .peopleCnt(request.peopleCnt())
                 .notes(request.notes())
                 .price(request.price())
+                .canChange(true)
                 .build();
 
         Reservation save = reservationRepository.save(reservation);
 
         // 관리자에게 메일 전송
-        publisher.publishEvent(new ReservationEvent(reservation.getStatus(),reservation.getCode()));
+        publisher.publishEvent(new ReservationEvent(reservation.getStatus(), reservation.getCode()));
         return new ReservationSaveResponse(save.getCode());
     }
 
+    /*
+     * 촬영 전/중/후 예약 내역 조회하는 함수
+     */
     public List<ReservationResponse> getReservationsByStatus(final Long memberId, final ReservationLookUpRequest status) {
         ReservationFinder strategy = reservationFinders.mapping(status);
         return strategy.getReservations(memberId);
@@ -86,26 +91,47 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelReservation(Long memberId, Long reservationId) {
+    public void cancelReservation(final Long memberId, final Long reservationId) {
         validReservationWithMember(memberId, reservationId);
 
         Reservation reservation = findReservation(reservationId);
+        // 취소 가능한 지 확인
         if (!cancelValidator.canCancelReservation(reservation))
             throw new ReservationException(CANT_CANCEL);
 
         reservation.cancel();
-        reservation.getTimeSlot().cancel();
+        reservation.getTimeSlot().SetAvailable();
 
-        publisher.publishEvent(new ReservationEvent(reservation.getStatus(),reservation.getCode()));
+        publisher.publishEvent(new ReservationEvent(reservation.getStatus(), reservation.getCode()));
+    }
+
+    /*
+     * 입금 후 입금 확인 요청을 전송하는 함수
+     */
+    @Transactional
+    public void requestPaymentConfirmation(final Long memberId, final Long reservationId) {
+        validReservationWithMember(memberId, reservationId);
+        Reservation reservation = findReservation(reservationId);
+        reservation.sendConfirmRequest();
+
+        publisher.publishEvent(new ReservationEvent(reservation.getStatus(), reservation.getCode()));
     }
 
     @Transactional
-    public void requestPaymentConfirmation(Long memberId, Long reservationId) {
+    public void rescheduleTimeSlot(final Long memberId, final Long reservationId, final Long timeSlotId) {
         validReservationWithMember(memberId, reservationId);
         Reservation reservation = findReservation(reservationId);
-        reservation.sendPaymentRequest();
 
-        publisher.publishEvent(new ReservationEvent(reservation.getStatus(),reservation.getCode()));
+        // 변경 가능한 지 확인
+        if (!reservation.isCanChange() || LocalDate.now().isEqual(reservation.getShootDate()))
+            throw new ReservationException(CANCELLATION_NOT_ALLOWED);
+
+        TimeSlot timeSlot = findTimeSlot(timeSlotId);
+
+        reservation.getTimeSlot().SetAvailable();
+        reservation.changeTimeSlot(timeSlot);
+
+        timeSlot.SetUnAvailable();
     }
 
 

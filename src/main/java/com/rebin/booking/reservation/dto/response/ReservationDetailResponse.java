@@ -17,7 +17,8 @@ public record ReservationDetailResponse(
         int peopleCnt,
         boolean isAgreeUpload,
         String notes,
-        int price
+        int price,
+        boolean canChange
 
 ) {
     public static ReservationDetailResponse of(Reservation reservation) {
@@ -32,7 +33,8 @@ public record ReservationDetailResponse(
                 reservation.getPeopleCnt(),
                 reservation.isAgreeUpload(),
                 reservation.getNotes(),
-                reservation.getPrice()
+                reservation.getPrice(),
+                reservation.isCanChange()
         );
     }
 }

@@ -44,7 +44,7 @@ public class TimeSlot {
         this.isAvailable = false;
     }
 
-    public void cancel() {
+    public void SetAvailable() {
         this.isAvailable = true;
     }
 }
