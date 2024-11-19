@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)// todo 공부
@@ -34,27 +36,31 @@ public class Member extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private ProviderType provider;
 
-    public Member(String loginId, String email, String nickname,ProviderType provider) {
-        this.email = email;
-        this.loginId = loginId;
-        this.nickname = nickname;
-        this.provider = provider;
+    public Member(String loginId, String email, String nickname, ProviderType provider) {
+        this.email = Objects.requireNonNull(email);
+        this.loginId = Objects.requireNonNull(loginId);
+        this.nickname = Objects.requireNonNull(nickname);
+        this.provider = Objects.requireNonNull(provider);
+        this.name = "";
+        this.phone = "";
     }
 
-    public void updateName(String newName){
+    public void updateName(String newName) {
         this.name = newName;
     }
-    public void updatePhone(String newPhone){
+
+    public void updatePhone(String newPhone) {
         this.phone = newPhone;
     }
-    public void updateNickname(String newNickname){
+
+    public void updateNickname(String newNickname) {
         this.nickname = newNickname;
     }
 
     public void updateMemberIfNameOrPhoneMissing(String name, String phone) {
-        if(this.name.isEmpty())
-            this.name= name;
-        if(this.phone.isEmpty())
+        if (this.name.isEmpty())
+            this.name = name;
+        if (this.phone.isEmpty())
             this.phone = phone;
     }
 }
