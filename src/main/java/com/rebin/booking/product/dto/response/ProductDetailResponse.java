@@ -10,7 +10,8 @@ public record ProductDetailResponse(
         String description,
         List<ProductImageResponse> images,
         String guideLine,
-        int extraPersonFee,
+        int deposit,
+        int additionalFee,
         boolean isMemberLike
 
 ) {
@@ -25,7 +26,8 @@ public record ProductDetailResponse(
                 product.getDescription(),
                 imageResponses,
                 product.getGuideLine(),
-                product.getExtraPersonFee(),
+                product.getDeposit(),
+                product.getAdditionalFee(),
                 isMemberLike
         );
     }

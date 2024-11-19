@@ -7,7 +7,7 @@ public record NoticeResponse(
         String title,
         String content
 ) {
-    public static NoticeResponse of(Notice notice){
+    public static NoticeResponse from(Notice notice){
         return new NoticeResponse(
                 notice.getId(),
                 notice.getTitle(),

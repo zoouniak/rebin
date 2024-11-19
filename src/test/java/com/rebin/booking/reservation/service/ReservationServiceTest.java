@@ -20,6 +20,7 @@ import com.rebin.booking.reservation.service.strategy.ReservationFinders;
 import com.rebin.booking.reservation.service.strategy.ShootAfterReservationFinder;
 import com.rebin.booking.reservation.service.strategy.ShootBeforeReservationFinder;
 import com.rebin.booking.reservation.service.strategy.ShootCanceledReservationFinder;
+import com.rebin.booking.reservation.util.PriceCalculator;
 import com.rebin.booking.reservation.validator.ReservationCancelValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -61,6 +63,11 @@ class ReservationServiceTest {
     private ReservationFinders reservationFinders;
     @Mock
     private ReservationCancelValidator cancelValidator;
+    @Mock
+    private ApplicationEventPublisher publisher;
+    @Mock
+    private PriceCalculator calculator;
+
 
     @Test
     void 예약_한다() {
@@ -124,7 +131,7 @@ class ReservationServiceTest {
     @Test
     void 촬영후_예약을_조회한다() {
         // given
-        Reservation reservation = reservation(COMPLETED);
+        Reservation reservation = reservation(SHOOTING_COMPLETED);
         ReservationLookUpRequest req = AFTER;
         when(reservationFinders.mapping(req)).thenReturn(new ShootAfterReservationFinder(reservationRepository));
         when(reservationRepository.findAllAfterShootByMemberId(any())).thenReturn(List.of(reservation));
@@ -194,7 +201,7 @@ class ReservationServiceTest {
 
     @Test
     void 취소가_불가능한_예약을_취소한다() {
-        Reservation reservation = reservation(COMPLETED);
+        Reservation reservation = reservation(SHOOTING_COMPLETED);
         when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(true);
         when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
         when(cancelValidator.canCancelReservation(any())).thenReturn(false);
@@ -225,8 +232,7 @@ class ReservationServiceTest {
                 true,
                 true,
                 1L,
-                1L,
-                10000
+                1L
         );
     }
 
@@ -238,7 +244,8 @@ class ReservationServiceTest {
         return Product.builder()
                 .id(1L)
                 .description("설명")
-                .extraPersonFee(10_000)
+                .additionalFee(10_000)
+                .deposit(10_000)
                 .guideLine("가이드라인")
                 .name("프로필 사진")
                 .price(70_000)
@@ -249,7 +256,7 @@ class ReservationServiceTest {
 
 
     private static Member member() {
-        return new Member("loginId", "email", ProviderType.KAKAO);
+        return new Member("loginId", "email","nickname", ProviderType.KAKAO);
     }
 
     private static Reservation reservation(ReservationStatusType statusType) {
@@ -266,7 +273,7 @@ class ReservationServiceTest {
                 .isAgreePrivacyPolicy(req.agreeToPrivacyPolicy())
                 .peopleCnt(req.peopleCnt())
                 .notes(req.notes())
-                .price(req.price())
+                .price(10_000)
                 .build();
     }
 

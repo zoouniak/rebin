@@ -12,7 +12,7 @@ import static com.rebin.booking.common.excpetion.ErrorCode.INVALID_NOTICE;
 
 @Service
 @RequiredArgsConstructor
-public class NoticeService {
+public class AdminNoticeService {
     private final NoticeRepository noticeRepository;
 
     public NoticeResponse saveNotice(final NoticeRequest request) {
@@ -21,12 +21,7 @@ public class NoticeService {
                 .content(request.content())
                 .build();
         Notice save = noticeRepository.save(notice);
-        return NoticeResponse.of(save);
-    }
-
-    public NoticeResponse getNotice(final Long noticeId) {
-        Notice notice = findNotice(noticeId);
-        return NoticeResponse.of(notice);
+        return NoticeResponse.from(save);
     }
 
     public void updateNotice(final Long noticeId, final NoticeRequest request) {
@@ -47,6 +42,4 @@ public class NoticeService {
         return noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new NoticeException(INVALID_NOTICE));
     }
-
-
 }

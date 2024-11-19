@@ -21,13 +21,15 @@ public enum ErrorCode {
     NOT_SUPPORT_STATUS("R003", "err.invalid.status"),
     INVALID_RESERVATION("R004", "err.invalid.reservation"),
     CANT_CANCEL("R005", "err.fail-cancel.reservation"),
+    CANCELLATION_NOT_ALLOWED("R006","err.unavailable.cancellation"),
     ALREADY_WRITE("V001", "err.already-write.review"),
     INVALID_REVIEW("V002", "err.invalid.review"),
     INVALID_IMG_PATH("I001", "err.invalid.path"),
     INVALID_IMAGE("I002","err.invalid.image"),
     EXCEED_IMAGE_LIST_SIZE("I003","err.exceed.image-size"),
     EMPTY_IMAGE_LIST("I004","err.empty.image-size"),
-    INVALID_NOTICE("N001","err.invalid.notice");
+    INVALID_NOTICE("N001","err.invalid.notice"),
+    INVALID_MEMBER("M001","err.invalid.member");
 
     private final String code;
     private final String msg;

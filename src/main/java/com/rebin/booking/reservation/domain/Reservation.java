@@ -62,8 +62,10 @@ public class Reservation extends BaseTimeEntity {
     @Column
     private int price;
 
+    private boolean canChange;
+
     @Builder
-    public Reservation(Product product, Member member, TimeSlot timeSlot, String code, ReservationStatusType status, LocalDate shootDate, boolean isAgreeUpload, boolean isAgreePrivacyPolicy, int peopleCnt, String notes, int price) {
+    public Reservation(Product product, Member member, TimeSlot timeSlot, String code, ReservationStatusType status, LocalDate shootDate, boolean isAgreeUpload, boolean isAgreePrivacyPolicy, int peopleCnt, String notes, int price, boolean canChange) {
         this.product = product;
         this.member = member;
         this.timeSlot = timeSlot;
@@ -75,13 +77,19 @@ public class Reservation extends BaseTimeEntity {
         this.peopleCnt = peopleCnt;
         this.notes = notes;
         this.price = price;
+        this.canChange = canChange;
     }
 
     public void cancel() {
         this.status = CANCELED;
     }
 
-    public void sendPaymentRequest() {
+    public void sendConfirmRequest() {
         this.status = CONFIRM_REQUESTED;
+    }
+
+    public void changeTimeSlot(TimeSlot timeSlot) {
+        this.timeSlot = timeSlot;
+        this.canChange = false;
     }
 }

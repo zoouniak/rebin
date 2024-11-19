@@ -32,7 +32,8 @@ public class ProductWriteService {
                 .summary(request.summary())
                 .description(request.description())
                 .thumbnail(request.thumbnail())
-                .extraPersonFee(request.extraPersonFee())
+                .deposit(request.deposit())
+                .additionalFee(request.additionalFee())
                 .guideLine(request.guideLine())
                 .build());
 
@@ -54,11 +55,13 @@ public class ProductWriteService {
                 .summary(request.summary())
                 .description(request.description())
                 .thumbnail(updateThumbNail(request.thumbnail(), product))
-                .extraPersonFee(request.extraPersonFee())
+                .deposit(request.deposit())
+                .images(updateImages(product.getImages(), request.images(), product))
+                .additionalFee(request.additionalFee())
                 .guideLine(request.guideLine())
                 .build();
 
-        updateImages(product.getImages(), request.images(), product);
+
         productRepository.save(updatedProduct);
     }
 
@@ -67,13 +70,14 @@ public class ProductWriteService {
         productRepository.deleteById(productId);
     }
 
-    private void updateImages(final List<ProductImage> oldImages, final List<String> newImageNames, Product product) {
+    private List<ProductImage> updateImages(final List<ProductImage> oldImages, final List<String> newImageNames, Product product) {
         List<ProductImage> newImages = newImageNames.stream()
                 .map(imageName -> makeUpdatedImages(oldImages, imageName, product))
                 .toList();
 
         deleteNotUsedImages(oldImages, newImages);
         saveNewlyImages(oldImages, newImages);
+        return newImages;
     }
 
     private ProductImage makeUpdatedImages(final List<ProductImage> oldImages, final String imageName, final Product product) {
