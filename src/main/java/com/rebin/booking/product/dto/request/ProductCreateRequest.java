@@ -17,9 +17,10 @@ public record ProductCreateRequest(
         String description,
         String thumbnail,
         List<String> images,
-
-        @PositiveOrZero(message = "가격은 0원 이상이여야 합니다.")
-        int extraPersonFee,
+        @PositiveOrZero(message = "예약금은 0원 이상이여야 합니다.")
+        int deposit,
+        @PositiveOrZero(message = "추가 금액은 0원 이상이여야 합니다.")
+        int additionalFee,
         @Size(max = 2000, message = "가이드라인 길이는 2000자 이하여야 합니다.")
         String guideLine
 ) {

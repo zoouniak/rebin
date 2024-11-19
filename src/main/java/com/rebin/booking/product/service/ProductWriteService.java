@@ -32,7 +32,8 @@ public class ProductWriteService {
                 .summary(request.summary())
                 .description(request.description())
                 .thumbnail(request.thumbnail())
-                .extraPersonFee(request.extraPersonFee())
+                .deposit(request.deposit())
+                .additionalFee(request.additionalFee())
                 .guideLine(request.guideLine())
                 .build());
 
@@ -54,7 +55,8 @@ public class ProductWriteService {
                 .summary(request.summary())
                 .description(request.description())
                 .thumbnail(updateThumbNail(request.thumbnail(), product))
-                .extraPersonFee(request.extraPersonFee())
+                .deposit(request.deposit())
+                .additionalFee(request.additionalFee())
                 .guideLine(request.guideLine())
                 .build();
 

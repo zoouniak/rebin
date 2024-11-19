@@ -40,7 +40,10 @@ public class Product extends BaseTimeEntity {
     private String thumbnail;
 
     @Column
-    private int extraPersonFee;
+    private int deposit;
+
+    @Column
+    private int additionalFee;
 
     @Column(length = 5000)
     private String guideLine;
@@ -49,14 +52,15 @@ public class Product extends BaseTimeEntity {
     private List<ProductImage> images = new ArrayList<>();
 
     @Builder
-    public Product(Long id, String name, int price, String summary, String description, String thumbnail, int extraPersonFee, String guideLine,List<ProductImage> images) {
+    public Product(Long id, String name, int price, String summary, String description, String thumbnail,int deposit, int additionalFee, String guideLine,List<ProductImage> images) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.summary = summary;
         this.description = description;
         this.thumbnail = thumbnail;
-        this.extraPersonFee = extraPersonFee;
+        this.deposit = deposit;
+        this.additionalFee = additionalFee;
         this.guideLine = guideLine;
         this.images = images;
     }
