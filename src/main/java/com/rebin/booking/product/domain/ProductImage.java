@@ -28,4 +28,11 @@ public class ProductImage {
         this.product = product;
         this.url = url;
     }
+    public ProductImage(String url){
+        this(null, url);
+    }
+
+    public void setProduct(Product product){
+        this.product = product;
+    }
 }
