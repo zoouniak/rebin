@@ -69,7 +69,8 @@ public class ReservationService {
                 .build();
 
         Reservation save = reservationRepository.save(reservation);
-        //  todo 관리자한테 예약 이메일 전송
+
+        // 관리자에게 메일 전송
         publisher.publishEvent(new ReservationEvent(reservation.getStatus(),reservation.getCode()));
         return new ReservationSaveResponse(save.getCode());
     }
@@ -94,6 +95,8 @@ public class ReservationService {
 
         reservation.cancel();
         reservation.getTimeSlot().cancel();
+
+        publisher.publishEvent(new ReservationEvent(reservation.getStatus(),reservation.getCode()));
     }
 
     @Transactional
@@ -102,7 +105,7 @@ public class ReservationService {
         Reservation reservation = findReservation(reservationId);
         reservation.sendPaymentRequest();
 
-        // todo 관리자에게 이메일 전송?
+        publisher.publishEvent(new ReservationEvent(reservation.getStatus(),reservation.getCode()));
     }
 
 
