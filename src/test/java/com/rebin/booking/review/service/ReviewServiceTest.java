@@ -1,16 +1,8 @@
 package com.rebin.booking.review.service;
 
 import com.rebin.booking.common.excpetion.ReviewException;
-import com.rebin.booking.member.domain.Member;
 import com.rebin.booking.member.domain.repository.MemberRepository;
-import com.rebin.booking.member.type.ProviderType;
-import com.rebin.booking.product.domain.Product;
-import com.rebin.booking.reservation.domain.Reservation;
-import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
-import com.rebin.booking.reservation.domain.type.ReservationStatusType;
-import com.rebin.booking.reservation.dto.request.ReservationRequest;
-import com.rebin.booking.review.domain.Review;
 import com.rebin.booking.review.domain.repository.ReviewHelpRepository;
 import com.rebin.booking.review.domain.repository.ReviewRepository;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
@@ -20,17 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Optional;
 
-import static com.rebin.booking.reservation.domain.type.ReservationStatusType.COMPLETED;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {

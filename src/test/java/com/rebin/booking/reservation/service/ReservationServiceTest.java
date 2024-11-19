@@ -124,7 +124,7 @@ class ReservationServiceTest {
     @Test
     void 촬영후_예약을_조회한다() {
         // given
-        Reservation reservation = reservation(COMPLETED);
+        Reservation reservation = reservation(SHOOTING_COMPLETED);
         ReservationLookUpRequest req = AFTER;
         when(reservationFinders.mapping(req)).thenReturn(new ShootAfterReservationFinder(reservationRepository));
         when(reservationRepository.findAllAfterShootByMemberId(any())).thenReturn(List.of(reservation));
@@ -194,7 +194,7 @@ class ReservationServiceTest {
 
     @Test
     void 취소가_불가능한_예약을_취소한다() {
-        Reservation reservation = reservation(COMPLETED);
+        Reservation reservation = reservation(SHOOTING_COMPLETED);
         when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(true);
         when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
         when(cancelValidator.canCancelReservation(any())).thenReturn(false);

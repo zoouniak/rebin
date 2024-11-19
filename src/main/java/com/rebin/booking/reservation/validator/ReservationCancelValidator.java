@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-import static com.rebin.booking.reservation.domain.type.ReservationStatusType.CANCELED;
-import static com.rebin.booking.reservation.domain.type.ReservationStatusType.COMPLETED;
+import static com.rebin.booking.reservation.domain.type.ReservationStatusType.*;
 
 @Component
 public class ReservationCancelValidator {
@@ -18,7 +17,7 @@ public class ReservationCancelValidator {
 
     // 상태 확인
     private boolean isReservationCancelableByStatus(Reservation reservation) {
-        return reservation.getStatus() != COMPLETED && reservation.getStatus() != CANCELED;
+        return reservation.getStatus() != SHOOTING_COMPLETED && reservation.getStatus() != CANCELED;
     }
 
     // 날짜 확인

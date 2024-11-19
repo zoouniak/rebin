@@ -43,7 +43,7 @@ class ReservationCancelValidatorTest {
 
     @Test
     void 촬영완료된_예약() {
-        when(reservation.getStatus()).thenReturn(ReservationStatusType.COMPLETED);
+        when(reservation.getStatus()).thenReturn(ReservationStatusType.SHOOTING_COMPLETED);
 
         boolean result = validator.canCancelReservation(reservation);
 
