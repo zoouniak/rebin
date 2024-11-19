@@ -62,7 +62,14 @@ public class Reservation extends BaseTimeEntity {
     @Column
     private int price;
 
+    @Column
     private boolean canChange;
+
+    @Column
+    private String payerName;
+
+    @Column
+    private LocalDate paymentDate;
 
     @Builder
     public Reservation(Product product, Member member, TimeSlot timeSlot, String code, ReservationStatusType status, LocalDate shootDate, boolean isAgreeUpload, boolean isAgreePrivacyPolicy, int peopleCnt, String notes, int price, boolean canChange) {
@@ -84,8 +91,11 @@ public class Reservation extends BaseTimeEntity {
         this.status = CANCELED;
     }
 
-    public void sendConfirmRequest() {
+    public void sendConfirmRequest(String payerName, LocalDate paymentDate) {
         this.status = CONFIRM_REQUESTED;
+        this.payerName = payerName;
+        this.paymentDate = paymentDate;
+
     }
 
     public void changeTimeSlot(TimeSlot timeSlot) {

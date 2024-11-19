@@ -11,6 +11,7 @@ import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
+import com.rebin.booking.reservation.dto.request.ConfirmRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
@@ -216,8 +217,9 @@ class ReservationServiceTest {
         Reservation reservation = reservation(PENDING_PAYMENT);
         when(reservationRepository.existsByMemberIdAndId(any(), any())).thenReturn(true);
         when(reservationRepository.findById(any())).thenReturn(Optional.of(reservation));
+        ConfirmRequest request = new ConfirmRequest("오주은",LocalDate.of(2024,4,3));
 
-        reservationService.requestPaymentConfirmation(1L, 1L);
+        reservationService.requestPaymentConfirmation(1L, 1L, request);
 
         Assertions.assertEquals(CONFIRM_REQUESTED, reservation.getStatus());
     }
