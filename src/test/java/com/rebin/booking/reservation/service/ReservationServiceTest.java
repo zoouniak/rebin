@@ -238,7 +238,8 @@ class ReservationServiceTest {
         return Product.builder()
                 .id(1L)
                 .description("설명")
-                .extraPersonFee(10_000)
+                .additionalFee(10_000)
+                .deposit(10_000)
                 .guideLine("가이드라인")
                 .name("프로필 사진")
                 .price(70_000)
@@ -249,7 +250,7 @@ class ReservationServiceTest {
 
 
     private static Member member() {
-        return new Member("loginId", "email", ProviderType.KAKAO);
+        return new Member("loginId", "email","nickname", ProviderType.KAKAO);
     }
 
     private static Reservation reservation(ReservationStatusType statusType) {
