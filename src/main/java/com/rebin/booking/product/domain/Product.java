@@ -52,7 +52,7 @@ public class Product extends BaseTimeEntity {
     private List<ProductImage> images = new ArrayList<>();
 
     @Builder
-    public Product(Long id, String name, int price, String summary, String description, String thumbnail,int deposit, int additionalFee, String guideLine,List<ProductImage> images) {
+    public Product(Long id, String name, int price, String summary, String description, String thumbnail, int deposit, int additionalFee, String guideLine, List<ProductImage> images) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -62,6 +62,6 @@ public class Product extends BaseTimeEntity {
         this.deposit = deposit;
         this.additionalFee = additionalFee;
         this.guideLine = guideLine;
-        this.images = images;
+        this.images = images == null ? List.of() : images;
     }
 }
