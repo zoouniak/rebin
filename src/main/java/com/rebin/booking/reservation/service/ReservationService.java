@@ -10,6 +10,7 @@ import com.rebin.booking.reservation.domain.ReservationEvent;
 import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
+import com.rebin.booking.reservation.dto.request.ConfirmRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
@@ -111,10 +112,10 @@ public class ReservationService {
      * 입금 후 입금 확인 요청을 전송하는 함수
      */
     @Transactional
-    public void requestPaymentConfirmation(final Long memberId, final Long reservationId) {
+    public void requestPaymentConfirmation(final Long memberId, final Long reservationId, final ConfirmRequest request) {
         validReservationWithMember(memberId, reservationId);
         Reservation reservation = findReservation(reservationId);
-        reservation.sendConfirmRequest();
+        reservation.sendConfirmRequest(request.payerName(), request.paymentDate());
 
         publisher.publishEvent(new ReservationEvent(reservation.getStatus(), reservation.getCode()));
     }

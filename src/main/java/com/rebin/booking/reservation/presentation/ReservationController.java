@@ -3,6 +3,7 @@ package com.rebin.booking.reservation.presentation;
 import com.rebin.booking.auth.domain.Accessor;
 import com.rebin.booking.auth.domain.Auth;
 import com.rebin.booking.auth.domain.MemberOnly;
+import com.rebin.booking.reservation.dto.request.ConfirmRequest;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
 import com.rebin.booking.reservation.dto.request.ReservationUpdateRequest;
@@ -61,8 +62,9 @@ public class ReservationController {
     @PatchMapping("/{reservationId}/payment")
     @MemberOnly
     public ResponseEntity<Void> requestPaymentConfirmation(@Auth Accessor accessor,
-                                              @PathVariable(value = "reservationId") Long reservationId) {
-        reservationService.requestPaymentConfirmation(accessor.getMemberId(), reservationId);
+                                                           @PathVariable(value = "reservationId") Long reservationId,
+                                                           @RequestBody @Valid ConfirmRequest request) {
+        reservationService.requestPaymentConfirmation(accessor.getMemberId(), reservationId, request);
         return ResponseEntity.noContent().build();
     }
 
