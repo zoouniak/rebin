@@ -10,7 +10,6 @@ import com.rebin.booking.review.domain.Review;
 import com.rebin.booking.review.domain.repository.ReviewHelpRepository;
 import com.rebin.booking.review.domain.repository.ReviewRepository;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
-import com.rebin.booking.review.dto.response.ReviewCreateResponse;
 import com.rebin.booking.review.dto.response.ReviewDetailResponse;
 import com.rebin.booking.review.dto.response.ReviewPageResponse;
 import com.rebin.booking.review.dto.response.ReviewResponse;
@@ -49,19 +48,19 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewCreateResponse createReview(final Long memberId, final ReviewCreateRequest request) {
+    public ReviewResponse createReview(final Long memberId, final ReviewCreateRequest request) {
         if (reviewRepository.existsByReservationId(request.reservationId()))
             throw new ReviewException(ALREADY_WRITE);
 
         Reservation reservation = findReservation(request.reservationId());
         Member member = findMember(memberId);
-        Review review = Review.builder()
+
+        Review save = reviewRepository.save(Review.builder()
                 .reservation(reservation)
                 .content(request.content())
                 .member(member)
-                .build();
-        Review save = reviewRepository.save(review);
-        return new ReviewCreateResponse(save.getId());
+                .build());
+        return ReviewResponse.of(save,0,false);
     }
 
     public ReviewResponse getReview(final Long memberId, final Long reviewId) {

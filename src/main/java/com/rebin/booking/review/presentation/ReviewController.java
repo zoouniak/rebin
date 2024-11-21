@@ -5,7 +5,6 @@ import com.rebin.booking.auth.domain.Auth;
 import com.rebin.booking.auth.domain.MemberOnly;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
 import com.rebin.booking.review.dto.request.ReviewEditRequest;
-import com.rebin.booking.review.dto.response.ReviewCreateResponse;
 import com.rebin.booking.review.dto.response.ReviewDetailResponse;
 import com.rebin.booking.review.dto.response.ReviewResponse;
 import com.rebin.booking.review.service.ReviewService;
@@ -24,7 +23,7 @@ public class ReviewController {
 
     @PostMapping
     @MemberOnly
-    public ResponseEntity<ReviewCreateResponse> createReview(@Auth Accessor accessor,
+    public ResponseEntity<ReviewResponse> createReview(@Auth Accessor accessor,
                                                              @RequestBody @Valid ReviewCreateRequest request) {
         return ResponseEntity.ok(reviewService.createReview(accessor.getMemberId(), request));
     }
