@@ -7,6 +7,7 @@ import com.rebin.booking.login.dto.request.LoginRequest;
 import com.rebin.booking.login.dto.response.AccessTokenResponse;
 import com.rebin.booking.login.dto.response.AuthTokens;
 import com.rebin.booking.login.service.LoginService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,7 @@ public class LoginController {
     private static final int COOKIE_AGE_SECONDS = 604800;
     private final LoginService loginService;
 
-    /*
-     * authorize code와 함께 로그인 요청
-     */
+    @Operation(summary = "소셜 로그인 (kakao, google)")
     @PostMapping("/login/{provider}")
     public ResponseEntity<AccessTokenResponse> login(
             @PathVariable(name = "provider") final String provider,
@@ -41,6 +40,7 @@ public class LoginController {
                 .build();
     }
 
+    @Operation(summary = "로그인 연장")
     @PostMapping("/login/extend")
     public ResponseEntity<?> extendLogin(
             @CookieValue(name = REFRESH_TOKEN) final String refreshToken,
@@ -53,6 +53,7 @@ public class LoginController {
                 .build();
     }
 
+    @Operation(summary = "로그아웃")
     @DeleteMapping("/logout")
     public ResponseEntity<?> logout(@Auth Accessor accessor, @CookieValue(name = REFRESH_TOKEN) final String refreshToken) {
         loginService.removeRefreshToken(refreshToken);
