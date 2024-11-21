@@ -10,7 +10,7 @@ import com.rebin.booking.review.domain.Review;
 import com.rebin.booking.review.domain.repository.ReviewHelpRepository;
 import com.rebin.booking.review.domain.repository.ReviewRepository;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
-import com.rebin.booking.review.dto.response.ReviewDetailResponse;
+import com.rebin.booking.review.dto.response.ReviewWithProductResponse;
 import com.rebin.booking.review.dto.response.ReviewPageResponse;
 import com.rebin.booking.review.dto.response.ReviewResponse;
 import lombok.RequiredArgsConstructor;
@@ -70,12 +70,12 @@ public class ReviewService {
         return ReviewResponse.of(review, helpCnt, isHelped);
     }
 
-    public List<ReviewDetailResponse> getReviewByMember(final Long memberId) {
+    public List<ReviewWithProductResponse> getReviewByMember(final Long memberId) {
         List<Review> reviews = reviewRepository.findAllByMemberId(memberId);
         return reviews.stream().map(review -> {
             int helpCnt = getHelpCnt(review);
             boolean isHelped = isHelped(memberId, review);
-            return new ReviewDetailResponse(
+            return new ReviewWithProductResponse(
                     ReviewResponse.of(review, helpCnt, isHelped),
                     ProductResponse.of(review.getProduct())
             );
