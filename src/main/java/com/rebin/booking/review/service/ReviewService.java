@@ -12,8 +12,10 @@ import com.rebin.booking.review.domain.repository.ReviewRepository;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
 import com.rebin.booking.review.dto.response.ReviewCreateResponse;
 import com.rebin.booking.review.dto.response.ReviewDetailResponse;
+import com.rebin.booking.review.dto.response.ReviewPageResponse;
 import com.rebin.booking.review.dto.response.ReviewResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +32,20 @@ public class ReviewService {
     private final MemberRepository memberRepository;
     private final ReservationRepository reservationRepository;
 
-    public List<ReviewResponse> getReviewsByProduct(final Long memberId, final Long productId, final Pageable pageable) {
-        return reviewRepository.findByProductIdAndPageable(productId, pageable).stream()
+    public ReviewPageResponse getReviewsByProduct(final Long memberId, final Long productId, final Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findByProductIdAndPageable(productId, pageable);
+
+        return new ReviewPageResponse(reviews.getContent().stream()
                 .map(review -> {
                     int helpCnt = getHelpCnt(review);
                     boolean isHelped = isHelped(memberId, review);
 
-                    return  ReviewResponse.of(
+                    return ReviewResponse.of(
                             review,
                             helpCnt,
                             isHelped
                     );
-                }).toList();
+                }).toList(), reviews.isLast());
     }
 
     @Transactional
@@ -73,7 +77,7 @@ public class ReviewService {
             int helpCnt = getHelpCnt(review);
             boolean isHelped = isHelped(memberId, review);
             return new ReviewDetailResponse(
-                    ReviewResponse.of(review,helpCnt,isHelped),
+                    ReviewResponse.of(review, helpCnt, isHelped),
                     ProductResponse.of(review.getProduct())
             );
         }).toList();
