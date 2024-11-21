@@ -5,6 +5,7 @@ public enum ErrorCode {
     INVALID_AUTHORITY("A001", "err.invalid.authority"),
     INVALID_REQUEST("A002", "err.invalid.request"),
     INVALID_ARGUMENT("A003", "err.invalid.argument"),
+    INVALID_ADMIN("AD001","err.invalid.admin"),
 
     FAIL_GET_USERINFO("L001", "err.fail.get-userinfo"),
     INVALID_AUTHORIZE_CODE("L002", "err.invalid.auth-code"),

@@ -15,7 +15,7 @@ public class Admin {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(updatable = false)
+    @Column(updatable = false, unique = true)
     private String loginId;
 
     @Column
