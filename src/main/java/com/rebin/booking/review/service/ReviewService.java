@@ -6,13 +6,12 @@ import com.rebin.booking.member.domain.repository.MemberRepository;
 import com.rebin.booking.product.dto.response.ProductResponse;
 import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
+import com.rebin.booking.review.domain.Comment;
 import com.rebin.booking.review.domain.Review;
 import com.rebin.booking.review.domain.repository.ReviewHelpRepository;
 import com.rebin.booking.review.domain.repository.ReviewRepository;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
-import com.rebin.booking.review.dto.response.ReviewWithProductResponse;
-import com.rebin.booking.review.dto.response.ReviewPageResponse;
-import com.rebin.booking.review.dto.response.ReviewResponse;
+import com.rebin.booking.review.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,7 +59,7 @@ public class ReviewService {
                 .content(request.content())
                 .member(member)
                 .build());
-        return ReviewResponse.of(save,0,false);
+        return ReviewResponse.of(save, 0, false);
     }
 
     public ReviewResponse getReview(final Long memberId, final Long reviewId) {
@@ -70,7 +69,20 @@ public class ReviewService {
         return ReviewResponse.of(review, helpCnt, isHelped);
     }
 
-    public List<ReviewWithProductResponse> getReviewByMember(final Long memberId) {
+    public ReviewDetailResponse getReviewDetail(Long memberId, Long reviewId) {
+        Review review = findReview(reviewId);
+        int helpCnt = getHelpCnt(review);
+        boolean isHelped = isHelped(memberId, review);
+        final ReviewResponse reviewResponse = ReviewResponse.of(review, helpCnt, isHelped);
+        final List<Comment> comments = review.getComments();
+        final List<CommentResponse> commentResponses = comments.stream()
+                .map(CommentResponse::from)
+                .toList();
+
+        return new ReviewDetailResponse(reviewResponse, commentResponses);
+    }
+
+    public List<ReviewWithProductResponse> getReviewsByMember(final Long memberId) {
         List<Review> reviews = reviewRepository.findAllByMemberId(memberId);
         return reviews.stream().map(review -> {
             int helpCnt = getHelpCnt(review);
