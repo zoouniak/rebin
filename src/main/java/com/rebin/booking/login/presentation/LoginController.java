@@ -18,6 +18,7 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class LoginController {
     private static final String REFRESH_TOKEN = "refresh-token";
