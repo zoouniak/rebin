@@ -1,4 +1,4 @@
-package com.rebin.booking.image;
+package com.rebin.booking.image.service;
 
 import com.rebin.booking.common.excpetion.ImageException;
 import com.rebin.booking.image.domain.ImageFile;
