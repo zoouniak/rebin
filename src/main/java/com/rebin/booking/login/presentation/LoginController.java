@@ -43,7 +43,7 @@ public class LoginController {
 
     @Operation(summary = "로그인 연장")
     @PostMapping("/login/extend")
-    public ResponseEntity<?> extendLogin(
+    public ResponseEntity<Void> extendLogin(
             @CookieValue(name = REFRESH_TOKEN) final String refreshToken,
             @RequestHeader(name = AUTHORIZATION) final String authorizeHeader
 
@@ -56,7 +56,7 @@ public class LoginController {
 
     @Operation(summary = "로그아웃")
     @DeleteMapping("/logout")
-    public ResponseEntity<?> logout(@Auth Accessor accessor, @CookieValue(name = REFRESH_TOKEN) final String refreshToken) {
+    public ResponseEntity<Void> logout(@Auth Accessor accessor, @CookieValue(name = REFRESH_TOKEN) final String refreshToken) {
         loginService.removeRefreshToken(refreshToken);
         return ResponseEntity.noContent().build();
     }
