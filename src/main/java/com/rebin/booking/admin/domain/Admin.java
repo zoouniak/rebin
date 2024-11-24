@@ -4,12 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Admin {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -20,4 +23,10 @@ public class Admin {
 
     @Column
     private String password;
+
+    public Admin(Long id, String loginId, String password) {
+        this.id = id;
+        this.loginId = loginId;
+        this.password = password;
+    }
 }
