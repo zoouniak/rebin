@@ -29,7 +29,7 @@ public class AdminLoginController {
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(
+    public ResponseEntity<Void> login(
             @RequestBody @Valid final AdminLoginRequest adminLoginRequest
     ) {
         final AuthTokens tokens = adminLoginService.login(adminLoginRequest);
@@ -42,7 +42,7 @@ public class AdminLoginController {
 
     @Operation(summary = "로그인 연장")
     @PostMapping("/login/token")
-    public ResponseEntity<?> extendLogin(
+    public ResponseEntity<Void> extendLogin(
             @CookieValue(name = REFRESH_TOKEN) final String refreshToken,
             @RequestHeader(name = AUTHORIZATION) final String authorizeHeader
 
@@ -55,7 +55,7 @@ public class AdminLoginController {
 
     @Operation(summary = "로그아웃")
     @DeleteMapping("/logout")
-    public ResponseEntity<?> logout(@Auth Accessor accessor, @CookieValue(name = REFRESH_TOKEN) final String refreshToken) {
+    public ResponseEntity<Void> logout(@Auth Accessor accessor, @CookieValue(name = REFRESH_TOKEN) final String refreshToken) {
         adminLoginService.removeRefreshToken(refreshToken);
         return ResponseEntity.noContent().build();
     }
