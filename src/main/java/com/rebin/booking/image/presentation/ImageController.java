@@ -1,6 +1,6 @@
 package com.rebin.booking.image.presentation;
 
-import com.rebin.booking.image.ImageService;
+import com.rebin.booking.image.service.ImageService;
 import com.rebin.booking.image.dto.response.ImageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
