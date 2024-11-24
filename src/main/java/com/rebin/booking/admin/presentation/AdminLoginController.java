@@ -1,13 +1,13 @@
-package com.rebin.booking.login.presentation;
+package com.rebin.booking.admin.presentation;
 
-
+import com.rebin.booking.admin.dto.request.AdminLoginRequest;
+import com.rebin.booking.admin.service.AdminLoginService;
 import com.rebin.booking.auth.domain.Accessor;
 import com.rebin.booking.auth.domain.Auth;
-import com.rebin.booking.login.dto.request.LoginRequest;
 import com.rebin.booking.login.dto.response.AccessTokenResponse;
 import com.rebin.booking.login.dto.response.AuthTokens;
-import com.rebin.booking.login.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -18,22 +18,21 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
-public class LoginController {
+@RequestMapping("/admin")
+public class AdminLoginController {
     private static final String REFRESH_TOKEN = "refresh-token";
     private static final String ACCESS_TOKEN = "access-token";
     private static final int COOKIE_AGE_SECONDS = 604800;
-    private final LoginService loginService;
 
-    @Operation(summary = "소셜 로그인 (kakao, google)")
-    @PostMapping("/login/{provider}")
-    public ResponseEntity<AccessTokenResponse> login(
-            @PathVariable(name = "provider") final String provider,
-            @RequestBody final LoginRequest loginRequest
+    private final AdminLoginService adminLoginService;
+
+    @Operation(summary = "로그인")
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(
+            @RequestBody @Valid final AdminLoginRequest adminLoginRequest
     ) {
-        AuthTokens tokens = loginService.login(provider, loginRequest);
-
+        final AuthTokens tokens = adminLoginService.login(adminLoginRequest);
         return ResponseEntity.
                 status(CREATED)
                 .header(SET_COOKIE, makeCookie(tokens.refreshToken()).toString())
@@ -42,13 +41,13 @@ public class LoginController {
     }
 
     @Operation(summary = "로그인 연장")
-    @PostMapping("/login/extend")
+    @PostMapping("/login/token")
     public ResponseEntity<Void> extendLogin(
             @CookieValue(name = REFRESH_TOKEN) final String refreshToken,
             @RequestHeader(name = AUTHORIZATION) final String authorizeHeader
 
     ) {
-        AccessTokenResponse accessToken = loginService.extend(authorizeHeader, refreshToken);
+        AccessTokenResponse accessToken = adminLoginService.extend(authorizeHeader, refreshToken);
         return ResponseEntity.status(CREATED)
                 .header(ACCESS_TOKEN, accessToken.accessToken())
                 .build();
@@ -57,7 +56,7 @@ public class LoginController {
     @Operation(summary = "로그아웃")
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(@Auth Accessor accessor, @CookieValue(name = REFRESH_TOKEN) final String refreshToken) {
-        loginService.removeRefreshToken(refreshToken);
+        adminLoginService.removeRefreshToken(refreshToken);
         return ResponseEntity.noContent().build();
     }
 

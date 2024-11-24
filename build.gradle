@@ -42,6 +42,9 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+    // bcrypt
+    implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+
 
     // query dsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

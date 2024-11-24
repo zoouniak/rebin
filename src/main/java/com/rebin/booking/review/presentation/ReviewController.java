@@ -5,10 +5,11 @@ import com.rebin.booking.auth.domain.Auth;
 import com.rebin.booking.auth.domain.MemberOnly;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
 import com.rebin.booking.review.dto.request.ReviewEditRequest;
-import com.rebin.booking.review.dto.response.ReviewCreateResponse;
 import com.rebin.booking.review.dto.response.ReviewDetailResponse;
+import com.rebin.booking.review.dto.response.ReviewWithProductResponse;
 import com.rebin.booking.review.dto.response.ReviewResponse;
 import com.rebin.booking.review.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +23,29 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
+    @Operation(summary = "리뷰 생성 (길이 10자 이상 500자 이하)")
     @PostMapping
     @MemberOnly
-    public ResponseEntity<ReviewCreateResponse> createReview(@Auth Accessor accessor,
-                                                             @RequestBody @Valid ReviewCreateRequest request) {
+    public ResponseEntity<ReviewResponse> createReview(@Auth Accessor accessor,
+                                                       @RequestBody @Valid ReviewCreateRequest request) {
         return ResponseEntity.ok(reviewService.createReview(accessor.getMemberId(), request));
     }
 
+    @Operation(summary = "리뷰 조회")
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse> getReview(@Auth Accessor accessor,
                                                     @PathVariable(value = "reviewId") Long reviewId) {
         return ResponseEntity.ok(reviewService.getReview(accessor.getMemberId(), reviewId));
     }
 
+    @Operation(summary = "리뷰 상세 조회")
+    @GetMapping("/{reviewId}/detail")
+    public ResponseEntity<ReviewDetailResponse> getReviewDetail(@Auth Accessor accessor,
+                                                                @PathVariable(value = "reviewId") Long reviewId) {
+        return ResponseEntity.ok(reviewService.getReviewDetail(accessor.getMemberId(), reviewId));
+    }
+
+    @Operation(summary = "리뷰 수정")
     @PatchMapping("/{reviewId}")
     @MemberOnly
     public ResponseEntity<Void> editReview(@Auth Accessor accessor,
@@ -44,18 +55,20 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "리뷰 삭제")
     @DeleteMapping("/{reviewId}")
     @MemberOnly
     public ResponseEntity<Void> deleteReview(@Auth Accessor accessor,
-                                             @PathVariable(value = "reviewId") Long reviewId){
+                                             @PathVariable(value = "reviewId") Long reviewId) {
         reviewService.deleteReview(accessor.getMemberId(), reviewId);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "내가 작성한 리뷰 조회")
     @GetMapping("/my")
     @MemberOnly
-    public ResponseEntity<List<ReviewDetailResponse>> getReviewByMember(@Auth Accessor accessor){
-        return ResponseEntity.ok(reviewService.getReviewByMember(accessor.getMemberId()));
+    public ResponseEntity<List<ReviewWithProductResponse>> getReviewByMember(@Auth Accessor accessor) {
+        return ResponseEntity.ok(reviewService.getReviewsByMember(accessor.getMemberId()));
     }
 
 }
