@@ -1,7 +1,6 @@
 package com.rebin.booking.login.infra;
 
 
-
 import com.rebin.booking.common.excpetion.InvalidJwtException;
 import com.rebin.booking.common.excpetion.JwtExpiredException;
 import com.rebin.booking.login.dto.response.AuthTokens;
@@ -11,8 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
@@ -34,8 +33,7 @@ public class JwtProvider {
             @Value(PREFIX + "access-expiration-time}") Long accessExpirationTime,
             @Value(PREFIX + "refresh-expiration-time}") Long refreshExpirationTime
     ) {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.accessExpirationTime = accessExpirationTime;
         this.refreshExpirationTime = refreshExpirationTime;
     }
@@ -51,15 +49,11 @@ public class JwtProvider {
         return createToken(userId, accessExpirationTime);
     }
 
-    private String createToken(final String userId, final Long tokenValidTime) {
-        final Date now = new Date();
-
-        return Jwts.builder()
-                .setHeader(createHeader())
-                .setSubject(userId)
-                .signWith(secretKey, signatureAlgorithm)
-                .setExpiration(createExpireDate(now, tokenValidTime))
-                .compact();
+    public void validateTokens(AuthTokens authTokens) {
+        if (isTokenExpired(authTokens.accessToken()))
+            throw new JwtExpiredException(EXPIRED_ACCESS_TOKEN);
+        if (isTokenExpired(authTokens.refreshToken()))
+            throw new JwtExpiredException(EXPIRED_REFRESH_TOKEN);
     }
 
     public String getUserIdFromToken(String accessToken) {
@@ -83,6 +77,17 @@ public class JwtProvider {
         return !isTokenExpired(accessToken) && !isTokenExpired(refreshToken);
     }
 
+    private String createToken(final String userId, final Long tokenValidTime) {
+        final Date now = new Date();
+
+        return Jwts.builder()
+                .setHeader(createHeader())
+                .setSubject(userId)
+                .signWith(secretKey, signatureAlgorithm)
+                .setExpiration(createExpireDate(now, tokenValidTime))
+                .compact();
+    }
+
     private boolean isTokenExpired(String token) {
         try {
             getClaims(token);
@@ -95,7 +100,6 @@ public class JwtProvider {
     private Map<String, Object> createHeader() {
         return Map.of("alg", "HS256", "typ", "jwt");
     }
-
 
     private Date createExpireDate(final Date now, final Long expirationTime) {
         return new Date(now.getTime() + expirationTime);
@@ -113,13 +117,5 @@ public class JwtProvider {
         } catch (JwtException e) {
             throw new InvalidJwtException(INVALID_TOKEN);
         }
-    }
-
-
-    public void validateTokens(AuthTokens authTokens) {
-        if (isTokenExpired(authTokens.accessToken()))
-            throw new JwtExpiredException(EXPIRED_ACCESS_TOKEN);
-        if (isTokenExpired(authTokens.refreshToken()))
-            throw new JwtExpiredException(EXPIRED_REFRESH_TOKEN);
     }
 }

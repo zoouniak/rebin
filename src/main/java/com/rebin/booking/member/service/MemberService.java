@@ -8,12 +8,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.regex.Pattern;
+
 import static com.rebin.booking.common.excpetion.ErrorCode.INVALID_MEMBER;
+import static com.rebin.booking.common.excpetion.ErrorCode.INVALID_PHONE_FORMAT;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^01[016789]-\\d{3,4}-\\d{4}$");
 
     public MemberResponse getProfile(Long memberId) {
         Member member = findMember(memberId);
@@ -29,6 +33,9 @@ public class MemberService {
 
     @Transactional
     public void editPhone(Long memberId, String phone) {
+        if(!PHONE_PATTERN.matcher(phone).matches())
+            throw new MemberException(INVALID_PHONE_FORMAT);
+
         Member member = findMember(memberId);
         member.updatePhone(phone);
     }
