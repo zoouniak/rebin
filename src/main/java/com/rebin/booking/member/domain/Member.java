@@ -1,6 +1,7 @@
 package com.rebin.booking.member.domain;
 
 import com.rebin.booking.common.domain.BaseTimeEntity;
+import com.rebin.booking.common.excpetion.MemberException;
 import com.rebin.booking.member.type.ProviderType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
+
+import static com.rebin.booking.common.excpetion.ErrorCode.EXCEED_NAME_LENGTH;
 
 @Entity
 @Getter
@@ -26,7 +29,7 @@ public class Member extends BaseTimeEntity {
     @Column
     private String nickname;
 
-    @Column(length = 11)
+    @Column
     private String phone;
 
     @Column(updatable = false)
@@ -45,7 +48,11 @@ public class Member extends BaseTimeEntity {
         this.phone = "";
     }
 
+    private static final int MAX_NAME_LENGTH = 10;
+
     public void updateName(String newName) {
+        if (newName.length() > MAX_NAME_LENGTH)
+            throw new MemberException(EXCEED_NAME_LENGTH);
         this.name = newName;
     }
 
@@ -54,6 +61,8 @@ public class Member extends BaseTimeEntity {
     }
 
     public void updateNickname(String newNickname) {
+        if (newNickname.length() > MAX_NAME_LENGTH)
+            throw new MemberException(EXCEED_NAME_LENGTH);
         this.nickname = newNickname;
     }
 
