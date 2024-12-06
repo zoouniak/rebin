@@ -8,7 +8,7 @@ public record NoticeRequest(
         @NotNull
         String title,
 
-        @Size(max = 5000, message = "제목의 길이는 5000자 이하여야합니다")
+        @Size(max = 500, message = "제목의 길이는 500자 이하여야합니다")
         @NotNull
         String content
 ) {
