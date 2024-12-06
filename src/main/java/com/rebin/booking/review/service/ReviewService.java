@@ -33,6 +33,7 @@ public class ReviewService {
     public ReviewPageResponse getReviewsByProduct(final Long memberId, final Long productId, final Pageable pageable) {
         Page<Review> reviews = reviewRepository.findByProductIdAndPageable(productId, pageable);
 
+
         return new ReviewPageResponse(reviews.getContent().stream()
                 .map(review -> {
                     int helpCnt = getHelpCnt(review);
@@ -43,7 +44,7 @@ public class ReviewService {
                             helpCnt,
                             isHelped
                     );
-                }).toList(), reviews.isLast());
+                }).toList(), reviews.getTotalElements(),reviews.isLast());
     }
 
     @Transactional
