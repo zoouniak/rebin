@@ -29,7 +29,6 @@ public class ReservationCodeService {
         Cache cache = cacheManager.getCache(CACHE);
         if (cache != null) {
             cache.clear();
-            log.info("Reservation-Code Cache REMOVED");
         }
     }
 }
