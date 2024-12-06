@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 public record ProductDetailResponse(
         Long id,
+        String name,
+        String thumbnail,
+        String summary,
+        int price,
         String description,
         List<ProductImageResponse> images,
         String guideLine,
@@ -23,6 +27,10 @@ public record ProductDetailResponse(
 
         return new ProductDetailResponse(
                 product.getId(),
+                product.getName(),
+                product.getThumbnail(),
+                product.getSummary(),
+                product.getPrice(),
                 product.getDescription(),
                 imageResponses,
                 product.getGuideLine(),
