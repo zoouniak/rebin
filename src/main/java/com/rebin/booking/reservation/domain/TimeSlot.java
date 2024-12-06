@@ -2,10 +2,7 @@ package com.rebin.booking.reservation.domain;
 
 import com.rebin.booking.common.excpetion.ErrorCode;
 import com.rebin.booking.common.excpetion.ReservationException;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +14,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Entity
+@Table( uniqueConstraints = @UniqueConstraint(columnNames = {"date", "startTime"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TimeSlot {
     @Id
