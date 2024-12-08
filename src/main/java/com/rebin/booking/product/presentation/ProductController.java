@@ -41,7 +41,7 @@ public class ProductController {
     @GetMapping("/{productId}/reviews")
     ResponseEntity<ReviewPageResponse> getProductReviews(@Auth final Accessor accessor,
                                                          @PathVariable final Long productId,
-                                                         @PageableDefault(sort = "review.id", direction = DESC) final Pageable pageable) {
+                                                         @PageableDefault(sort = "review.id", direction = DESC, size = 5) final Pageable pageable) {
         return ResponseEntity.ok(reviewService.getReviewsByProduct(accessor.getMemberId(), productId, pageable));
     }
 }

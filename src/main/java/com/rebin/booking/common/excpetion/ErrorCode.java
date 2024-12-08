@@ -32,7 +32,8 @@ public enum ErrorCode {
     INVALID_NOTICE("N001", "err.invalid.notice"),
     INVALID_MEMBER("M001", "err.invalid.member"),
     INVALID_PHONE_FORMAT("M002", "err.invalid.number-format"),
-    EXCEED_NAME_LENGTH("M003", "err.exceed.name-length"),;
+    EXCEED_NAME_LENGTH("M003", "err.exceed.name-length"),
+    ALREADY_EXIST("T001","err.already-exist.timeslot");
 
     private final String code;
     private final String msg;

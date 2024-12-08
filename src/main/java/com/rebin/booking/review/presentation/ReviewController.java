@@ -71,4 +71,20 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewsByMember(accessor.getMemberId()));
     }
 
+    @Operation(summary = "리뷰 도움돼요")
+    @PostMapping("/{reviewId}/helpful")
+    @MemberOnly
+    public ResponseEntity<Void> likeReview(@Auth Accessor accessor, @PathVariable Long reviewId) {
+        reviewService.makeReviewHelp(accessor.getMemberId(), reviewId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "리뷰 도움돼요 삭제")
+    @DeleteMapping("/{reviewId}/helpful")
+    @MemberOnly
+    public ResponseEntity<Void> removeReviewHelp(@Auth Accessor accessor, @PathVariable Long reviewId) {
+        reviewService.removeReviewHelp(accessor.getMemberId(), reviewId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

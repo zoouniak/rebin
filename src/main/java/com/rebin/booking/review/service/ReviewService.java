@@ -8,6 +8,7 @@ import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.review.domain.Comment;
 import com.rebin.booking.review.domain.Review;
+import com.rebin.booking.review.domain.ReviewHelp;
 import com.rebin.booking.review.domain.repository.ReviewHelpRepository;
 import com.rebin.booking.review.domain.repository.ReviewRepository;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
@@ -33,6 +34,7 @@ public class ReviewService {
     public ReviewPageResponse getReviewsByProduct(final Long memberId, final Long productId, final Pageable pageable) {
         Page<Review> reviews = reviewRepository.findByProductIdAndPageable(productId, pageable);
 
+
         return new ReviewPageResponse(reviews.getContent().stream()
                 .map(review -> {
                     int helpCnt = getHelpCnt(review);
@@ -43,7 +45,7 @@ public class ReviewService {
                             helpCnt,
                             isHelped
                     );
-                }).toList(), reviews.isLast());
+                }).toList(), reviews.getTotalElements(), reviews.isLast());
     }
 
     @Transactional
@@ -106,6 +108,18 @@ public class ReviewService {
     public void deleteReview(final Long memberId, final Long reviewId) {
         validReviewWithMember(memberId, reviewId);
         reviewRepository.deleteById(reviewId);
+    }
+
+    @Transactional
+    public void makeReviewHelp(final Long memberId, final Long reviewId) {
+        reviewHelpRepository.save(new ReviewHelp(
+                memberId, reviewId
+        ));
+    }
+
+    @Transactional
+    public void removeReviewHelp(final Long memberId, final Long reviewId) {
+        reviewHelpRepository.deleteByMemberIdAndReviewId(memberId, reviewId);
     }
 
     private boolean isHelped(final Long memberId, final Review review) {
