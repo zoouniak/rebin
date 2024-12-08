@@ -18,7 +18,7 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
 
     @Query("""
             select r from Reservation r where r.member.id = :memberId 
-            and (r.status = 'SHOOTING_COMPLETED' or r.status = 'SHOOTING_COMPLETED')
+            and (r.status = 'SHOOTING_COMPLETED' or r.status = 'REVIEW_COMPLETED')
             """)
     List<Reservation> findAllAfterShootByMemberId(Long memberId);
 
