@@ -3,12 +3,12 @@ package com.rebin.booking.listener;
 import com.rebin.booking.reservation.domain.ReservationEvent;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class ReservationEventListener {
@@ -24,7 +24,7 @@ public class ReservationEventListener {
         this.mailSender = mailSender;
     }
 
-    @EventListener
+    @TransactionalEventListener
     @Async
     public void sendMailToAdmin(ReservationEvent event) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
