@@ -8,7 +8,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
+
+import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 @Component
 public class ReservationEventListener {
@@ -25,6 +28,7 @@ public class ReservationEventListener {
     }
 
     @TransactionalEventListener
+    @Transactional(propagation = REQUIRES_NEW)
     @Async
     public void sendMailToAdmin(ReservationEvent event) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
