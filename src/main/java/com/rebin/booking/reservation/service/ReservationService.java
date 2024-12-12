@@ -10,6 +10,7 @@ import com.rebin.booking.reservation.domain.ReservationEvent;
 import com.rebin.booking.reservation.domain.TimeSlot;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.reservation.domain.repository.TimeSlotRepository;
+import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 import com.rebin.booking.reservation.dto.request.ConfirmRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
@@ -30,7 +31,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.rebin.booking.common.excpetion.ErrorCode.*;
-import static com.rebin.booking.reservation.domain.type.ReservationStatusType.PENDING_PAYMENT;
+import static com.rebin.booking.reservation.domain.type.ReservationStatusType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -113,20 +114,26 @@ public class ReservationService {
      */
     @Transactional
     public void requestPaymentConfirmation(final Long memberId, final Long reservationId, final ConfirmRequest request) {
-        validReservationWithMember(memberId, reservationId);
+        validReservationWithMemberAndStatus(memberId, reservationId, List.of(PENDING_PAYMENT));
         Reservation reservation = findReservation(reservationId);
         reservation.sendConfirmRequest(request.payerName(), request.paymentDate());
 
         publisher.publishEvent(new ReservationEvent(reservation.getStatus(), reservation.getCode()));
     }
 
+    /*
+     * 촬영날짜 재설정
+     */
     @Transactional
     public void rescheduleTimeSlot(final Long memberId, final Long reservationId, final Long timeSlotId) {
-        validReservationWithMember(memberId, reservationId);
+        // 촬영 전 예약인지 확인
+        validReservationWithMemberAndStatus(memberId, reservationId, List.of(PENDING_PAYMENT
+                , CONFIRM_REQUESTED
+                , PAYMENT_CONFIRMED));
         Reservation reservation = findReservation(reservationId);
 
         // 변경 가능한 지 확인
-        if (!reservation.isCanChange() || LocalDate.now().isEqual(reservation.getShootDate()))
+        if (!reservation.isCanChange() || LocalDate.now().isEqual(reservation.getShootDate())) // 촬영날짜당일에는 변경 불가
             throw new ReservationException(CANCELLATION_NOT_ALLOWED);
 
         TimeSlot timeSlot = findTimeSlot(timeSlotId);
@@ -175,4 +182,11 @@ public class ReservationService {
             throw new ReservationException(INVALID_RESERVATION);
         }
     }
+
+    private void validReservationWithMemberAndStatus(final Long memberId, final Long reservationId, List<ReservationStatusType> status) {
+        if (!reservationRepository.existsByMemberIdAndIdAndStatusIn(memberId, reservationId, status)) {
+            throw new ReservationException(INVALID_RESERVATION);
+        }
+    }
+
 }
