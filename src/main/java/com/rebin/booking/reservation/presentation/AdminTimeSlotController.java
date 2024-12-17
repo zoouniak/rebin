@@ -26,7 +26,14 @@ public class AdminTimeSlotController {
 
     @GetMapping
     @Operation(summary = "날짜별 타임슬롯 조회")
-    public ResponseEntity<List<TimeSlotResponseForAdmin>> getTimeSlots( @RequestParam LocalDate date) {
+    public ResponseEntity<List<TimeSlotResponseForAdmin>> getTimeSlots(@RequestParam LocalDate date) {
         return ResponseEntity.ok(adminTimeSlotService.getTimeSlots(date));
+    }
+
+    @DeleteMapping("/{timeSlotId}")
+    @Operation(summary = "타임슬롯 삭제")
+    public ResponseEntity<Void> deleteTimeSlot(@PathVariable Long timeSlotId) {
+        adminTimeSlotService.deleteTimeSlotById(timeSlotId);
+        return ResponseEntity.noContent().build();
     }
 }

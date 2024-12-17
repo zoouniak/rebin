@@ -30,5 +30,7 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
             """)
     List<Reservation> findAllCanceledShootByMemberId(Long memberId);
 
+    boolean existsByTimeSlotId(Long timeSlotId);
+
 
 }

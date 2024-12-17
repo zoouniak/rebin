@@ -19,6 +19,7 @@ public class CustomTimeSlotRepositoryImpl implements CustomTimeSlotRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final static RowMapper<TimeSlotResponseForAdmin> rowMapper = (ResultSet rs, int rowNum) ->
             new TimeSlotResponseForAdmin(
+                    rs.getLong("id"),
                     rs.getObject("date", LocalDate.class),
                     rs.getObject("start_time", LocalTime.class),
                     rs.getBoolean("is_available"),

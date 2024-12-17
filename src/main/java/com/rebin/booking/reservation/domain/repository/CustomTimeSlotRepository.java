@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CustomTimeSlotRepository {
     List<TimeSlotResponseForAdmin> findAllByDate(LocalDate date);
+
 }
