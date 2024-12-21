@@ -43,13 +43,13 @@ public class TimeSlot {
         this.isAvailable = true;
     }
 
-    public void SetUnAvailable() {
+    public void setUnAvailable() {
         if (!this.isAvailable)
             throw new ReservationException(ErrorCode.RESERVATION_FULL);
         this.isAvailable = false;
     }
 
-    public void SetAvailable() {
+    public void setAvailable() {
         this.isAvailable = true;
     }
 }
