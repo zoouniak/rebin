@@ -1,5 +1,6 @@
 package com.rebin.booking.reservation.dto.response;
 
+import com.rebin.booking.product.dto.response.ProductResponse;
 import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 
@@ -18,7 +19,8 @@ public record ReservationDetailResponse(
         boolean isAgreeUpload,
         String notes,
         int price,
-        boolean canChange
+        boolean canChange,
+        ProductResponse product
 
 ) {
     public static ReservationDetailResponse of(Reservation reservation) {
@@ -34,7 +36,8 @@ public record ReservationDetailResponse(
                 reservation.isAgreeUpload(),
                 reservation.getNotes(),
                 reservation.getPrice(),
-                reservation.isCanChange()
+                reservation.isCanChange(),
+                ProductResponse.of(reservation.getProduct())
         );
     }
 }
