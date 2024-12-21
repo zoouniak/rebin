@@ -103,8 +103,9 @@ public class ReservationService {
         if (!cancelValidator.canCancelReservation(reservation))
             throw new ReservationException(CANT_CANCEL);
 
-        reservation.cancel();
         reservation.getTimeSlot().SetAvailable();
+        reservation.cancel();
+
 
         publisher.publishEvent(new ReservationEvent(reservation.getStatus(), reservation.getCode()));
     }

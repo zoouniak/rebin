@@ -209,7 +209,7 @@ class ReservationServiceTest {
         reservationService.cancelReservation(1L, 1L);
 
         assertThat(reservation.getStatus()).isEqualTo(CANCELED);
-        assertThat(reservation.getTimeSlot().isAvailable()).isTrue();
+        assertThat(reservation.getTimeSlot()).isNull();
     }
 
     @Test
