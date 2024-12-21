@@ -6,7 +6,7 @@ import java.util.Random;
 
 
 
-public class ReservationCodeGenerator {
+public abstract class ReservationCodeGenerator {
     private static final Random RANDOM = new Random();
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
