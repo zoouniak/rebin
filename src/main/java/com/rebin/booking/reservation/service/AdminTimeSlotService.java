@@ -15,7 +15,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static com.rebin.booking.common.excpetion.ErrorCode.ALREADY_EXIST;
-import static com.rebin.booking.common.excpetion.ErrorCode.CANT_DELETE;
+import static com.rebin.booking.common.excpetion.ErrorCode.CANT_DELETE_TIMESLOT;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class AdminTimeSlotService {
     private final CustomTimeSlotRepository customTimeSlotRepository;
     private final ReservationRepository reservationRepository;
 
-    public TimeSlotResponse CreateTimeSlot(LocalDate date, LocalTime time) {
+    public TimeSlotResponse createTimeSlot(LocalDate date, LocalTime time) {
         if (timeSlotRepository.existsByDateAndStartTime(date, time))
             throw new TimeSlotException(ALREADY_EXIST);
 
@@ -39,7 +39,7 @@ public class AdminTimeSlotService {
 
     public void deleteTimeSlotById(final Long timeSlotId) {
         if (!canDelete(timeSlotId))
-            throw new TimeSlotException(CANT_DELETE);
+            throw new TimeSlotException(CANT_DELETE_TIMESLOT);
 
         timeSlotRepository.deleteById(timeSlotId);
     }

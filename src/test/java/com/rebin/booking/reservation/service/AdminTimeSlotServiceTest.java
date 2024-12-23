@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static com.rebin.booking.common.excpetion.ErrorCode.ALREADY_EXIST;
-import static com.rebin.booking.common.excpetion.ErrorCode.CANT_DELETE;
+import static com.rebin.booking.common.excpetion.ErrorCode.CANT_DELETE_TIMESLOT;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -43,7 +43,7 @@ class AdminTimeSlotServiceTest {
                 .thenReturn(true);
 
         // when
-        Assertions.assertThatThrownBy(() -> adminTimeSlotService.CreateTimeSlot(date, time))
+        Assertions.assertThatThrownBy(() -> adminTimeSlotService.createTimeSlot(date, time))
                 .isInstanceOf(TimeSlotException.class)
                 .hasMessage(ALREADY_EXIST.getMsg());
     }
@@ -60,7 +60,7 @@ class AdminTimeSlotServiceTest {
                 .thenReturn(new TimeSlot(1L, date, time));
 
         // when
-        TimeSlotResponse actual = adminTimeSlotService.CreateTimeSlot(date, time);
+        TimeSlotResponse actual = adminTimeSlotService.createTimeSlot(date, time);
         Assertions.assertThat(actual)
                 .extracting(TimeSlotResponse::date, TimeSlotResponse::startTime)
                 .containsExactly(date, time);
@@ -75,7 +75,7 @@ class AdminTimeSlotServiceTest {
         // when
         Assertions.assertThatThrownBy(() -> adminTimeSlotService.deleteTimeSlotById(1L))
                 .isInstanceOf(TimeSlotException.class)
-                .hasMessage(CANT_DELETE.getMsg());
+                .hasMessage(CANT_DELETE_TIMESLOT.getMsg());
     }
 
     @Test
