@@ -89,6 +89,8 @@ public class Reservation extends BaseTimeEntity {
 
     public void cancel() {
         this.status = CANCELED;
+        // 타임슬롯 의존성 제거
+        this.timeSlot = null;
     }
 
     public void sendConfirmRequest(String payerName, LocalDate paymentDate) {
@@ -101,5 +103,7 @@ public class Reservation extends BaseTimeEntity {
     public void changeTimeSlot(TimeSlot timeSlot) {
         this.timeSlot = timeSlot;
         this.canChange = false;
+        // 촬영 날짜 동기화
+        this.shootDate = timeSlot.getDate();
     }
 }

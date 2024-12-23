@@ -14,7 +14,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Entity
-@Table( uniqueConstraints = @UniqueConstraint(columnNames = {"date", "startTime"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"date", "startTime"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TimeSlot {
     @Id
@@ -30,19 +30,26 @@ public class TimeSlot {
     @Column
     private boolean isAvailable;
 
+    public TimeSlot(Long id, LocalDate date, LocalTime startTime) {
+        this.id = id;
+        this.date = date;
+        this.startTime = startTime;
+        this.isAvailable = true;
+    }
+
     public TimeSlot(LocalDate date, LocalTime startTime) {
         this.date = date;
         this.startTime = startTime;
         this.isAvailable = true;
     }
 
-    public void SetUnAvailable() {
+    public void setUnAvailable() {
         if (!this.isAvailable)
             throw new ReservationException(ErrorCode.RESERVATION_FULL);
         this.isAvailable = false;
     }
 
-    public void SetAvailable() {
+    public void setAvailable() {
         this.isAvailable = true;
     }
 }

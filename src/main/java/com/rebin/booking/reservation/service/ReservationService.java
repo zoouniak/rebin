@@ -57,7 +57,7 @@ public class ReservationService {
         TimeSlot timeSlot = findTimeSlot(request.timeSlotId());
         String code = generateUniqueReservationCode();
 
-        timeSlot.SetUnAvailable();
+        timeSlot.setUnAvailable();
 
         Reservation reservation = Reservation.builder()
                 .product(product)
@@ -103,8 +103,9 @@ public class ReservationService {
         if (!cancelValidator.canCancelReservation(reservation))
             throw new ReservationException(CANT_CANCEL);
 
+        reservation.getTimeSlot().setAvailable();
         reservation.cancel();
-        reservation.getTimeSlot().SetAvailable();
+
 
         publisher.publishEvent(new ReservationEvent(reservation.getStatus(), reservation.getCode()));
     }
@@ -138,10 +139,12 @@ public class ReservationService {
 
         TimeSlot timeSlot = findTimeSlot(timeSlotId);
 
-        reservation.getTimeSlot().SetAvailable();
+        reservation.getTimeSlot().setAvailable();
         reservation.changeTimeSlot(timeSlot);
 
-        timeSlot.SetUnAvailable();
+        timeSlot.setUnAvailable();
+
+
     }
 
 

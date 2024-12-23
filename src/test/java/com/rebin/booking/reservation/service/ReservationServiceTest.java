@@ -104,7 +104,7 @@ class ReservationServiceTest {
         Member member = member();
         Product product = product();
         TimeSlot timeSlot = timeSlot();
-        timeSlot.SetUnAvailable();
+        timeSlot.setUnAvailable();
 
         when(memberRepository.findByIdAndEmail(any(), any())).thenReturn(Optional.of(member));
         when(productRepository.findById(any())).thenReturn(Optional.of(product));
@@ -209,7 +209,7 @@ class ReservationServiceTest {
         reservationService.cancelReservation(1L, 1L);
 
         assertThat(reservation.getStatus()).isEqualTo(CANCELED);
-        assertThat(reservation.getTimeSlot().isAvailable()).isTrue();
+        assertThat(reservation.getTimeSlot()).isNull();
     }
 
     @Test

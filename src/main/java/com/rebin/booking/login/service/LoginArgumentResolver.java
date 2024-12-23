@@ -52,13 +52,13 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         }
 
         try {
-            final String refreshToken = extractRefreshToken(request.getCookies());
+           // final String refreshToken = extractRefreshToken(request.getCookies());
             final String accessToken = jwtProvider.resolveAccessToken(webRequest.getHeader(AUTHORIZATION));
-            jwtProvider.validateTokens(new AuthTokens(refreshToken, accessToken));
+         //   jwtProvider.validateTokens(new AuthTokens(refreshToken, accessToken));
 
             final Long memberId = Long.valueOf(jwtProvider.getUserIdFromToken(accessToken));
             return Accessor.member(memberId);
-        } catch (final AuthException e) {
+        } catch (final Exception e) {
             return Accessor.guest();
         }
     }
