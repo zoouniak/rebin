@@ -13,7 +13,7 @@ import java.util.Collections;
 @Configuration
 public class CacheConfig {
     @Bean
-    public CacheManager cacheManager() {
+    public CacheManager localCacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(Collections.singletonList(
                 new ConcurrentMapCache("reservationCodes")
