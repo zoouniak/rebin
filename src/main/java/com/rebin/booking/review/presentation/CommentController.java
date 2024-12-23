@@ -32,13 +32,12 @@ public class CommentController {
     @Operation(summary = "댓글 수정")
     @PatchMapping("/{commentId}")
     @MemberOnly
-    public ResponseEntity<Void> editComment(
+    public ResponseEntity<CommentResponse> editComment(
             @Auth Accessor accessor,
             @PathVariable Long commentId,
             @RequestBody @Valid CommentRequest request
     ) {
-        commentService.editComment(accessor.getMemberId(), commentId, request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(commentService.editComment(accessor.getMemberId(), commentId, request));
     }
 
     @Operation(summary = "댓글 삭제")

@@ -40,7 +40,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void editComment(final Long memberId, final Long commentId, final CommentRequest request) {
+    public CommentResponse editComment(final Long memberId, final Long commentId, final CommentRequest request) {
         if (!commentRepository.existsByIdAndMemberId(commentId, memberId))
             throw new CommentException(NOT_COMMENT_AUTHOR);
 
@@ -48,6 +48,8 @@ public class CommentService {
                 .orElseThrow(() -> new CommentException(INVALID_COMMENT));
 
         comment.edit(request.content());
+
+        return CommentResponse.from(comment);
     }
 
     @Transactional
