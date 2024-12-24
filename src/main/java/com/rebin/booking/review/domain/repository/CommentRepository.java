@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     boolean existsByIdAndMemberId(Long commentId, Long memberId);
+    void deleteByReviewId(Long reviewId);
 }

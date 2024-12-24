@@ -9,6 +9,7 @@ import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import com.rebin.booking.review.domain.Comment;
 import com.rebin.booking.review.domain.Review;
 import com.rebin.booking.review.domain.ReviewHelp;
+import com.rebin.booking.review.domain.repository.CommentRepository;
 import com.rebin.booking.review.domain.repository.ReviewHelpRepository;
 import com.rebin.booking.review.domain.repository.ReviewRepository;
 import com.rebin.booking.review.dto.request.ReviewCreateRequest;
@@ -30,6 +31,7 @@ public class ReviewService {
     private final ReviewHelpRepository reviewHelpRepository;
     private final MemberRepository memberRepository;
     private final ReservationRepository reservationRepository;
+    private final CommentRepository commentRepository;
 
     public ReviewPageResponse getReviewsByProduct(final Long memberId, final Long productId, final Pageable pageable) {
         Page<Review> reviews = reviewRepository.findByProductIdAndPageable(productId, pageable);
@@ -107,6 +109,9 @@ public class ReviewService {
     @Transactional
     public void deleteReview(final Long memberId, final Long reviewId) {
         validReviewWithMember(memberId, reviewId);
+
+        // 댓글 먼저 삭제
+        commentRepository.deleteByReviewId(reviewId);
         reviewRepository.deleteById(reviewId);
     }
 

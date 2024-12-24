@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -20,11 +19,11 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = {REMOVE}, fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
 
-    @ManyToOne(cascade = {REMOVE}, fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

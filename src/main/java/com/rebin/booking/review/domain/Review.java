@@ -15,7 +15,6 @@ import org.hibernate.annotations.SQLRestriction;
 import java.time.LocalDate;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -48,7 +47,7 @@ public class Review extends BaseTimeEntity {
     @Column(length = 5000)
     private String content;
 
-    @OneToMany(mappedBy = "review", cascade = REMOVE)
+    @OneToMany(mappedBy = "review")
     private List<Comment> comments;
 
     @Column
