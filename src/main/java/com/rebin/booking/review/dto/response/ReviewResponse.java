@@ -1,5 +1,6 @@
 package com.rebin.booking.review.dto.response;
 
+import com.rebin.booking.product.dto.response.ProductResponse;
 import com.rebin.booking.review.domain.Review;
 
 import java.time.LocalDate;
@@ -11,7 +12,8 @@ public record ReviewResponse(
         LocalDate shootDate,
         int helpCnt,
         boolean isHelped,
-        int commentCnt
+        int commentCnt,
+        ProductResponse productInfo
 
 ) {
     public static ReviewResponse of(Review review, int helpCnt, boolean isHelped){
@@ -22,7 +24,8 @@ public record ReviewResponse(
                 review.getShootDate(),
                 helpCnt,
                 isHelped,
-                review.getComments().size()
+                review.getComments().size(),
+                ProductResponse.of(review.getProduct())
         );
     }
 }
