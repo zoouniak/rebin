@@ -23,9 +23,7 @@ public class NoticeReadService {
     public NoticePageResponse getNotices(int page){
         Page<Notice> noticePage = noticeRepository.findAll(PageRequest.of(page, 10, Sort.by("id").descending()));
         List<NoticeResponse> notices = noticePage.getContent().stream()
-                .map(content -> new NoticeResponse(content.getId(),
-                        content.getTitle(),
-                        content.getContent()))
+                .map(NoticeResponse::from)
                 .toList();
         return new NoticePageResponse(noticePage.getTotalPages(), notices);
     }
