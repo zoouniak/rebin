@@ -5,13 +5,15 @@ import com.rebin.booking.auth.domain.Accessor;
 import com.rebin.booking.auth.domain.Auth;
 import com.rebin.booking.login.dto.request.LoginRequest;
 import com.rebin.booking.login.dto.response.AccessTokenResponse;
-import com.rebin.booking.login.dto.response.AuthTokens;
+import com.rebin.booking.login.dto.response.LoginResponse;
 import com.rebin.booking.login.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
@@ -28,17 +30,17 @@ public class LoginController {
 
     @Operation(summary = "소셜 로그인 (kakao, google)")
     @PostMapping("/login/{provider}")
-    public ResponseEntity<AccessTokenResponse> login(
+    public ResponseEntity<Map<String,String>> login(
             @PathVariable(name = "provider") final String provider,
             @RequestBody final LoginRequest loginRequest
     ) {
-        AuthTokens tokens = loginService.login(provider, loginRequest);
+        LoginResponse response = loginService.login(provider, loginRequest);
 
         return ResponseEntity.
                 status(CREATED)
-                .header(SET_COOKIE, makeCookie(tokens.refreshToken()).toString())
-                .header(ACCESS_TOKEN, tokens.accessToken())
-                .build();
+                .header(SET_COOKIE, makeCookie(response.tokens().refreshToken()).toString())
+                .header(ACCESS_TOKEN, response.tokens().accessToken())
+                .body(Map.of("nickname", response.nickname()));
     }
 
     @Operation(summary = "로그인 연장")
