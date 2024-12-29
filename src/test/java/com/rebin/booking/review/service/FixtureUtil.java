@@ -18,7 +18,7 @@ public abstract class FixtureUtil {
         return new Member("loginId", "email", "nickname", KAKAO);
     }
     public static Review review(){
-        return new Review(reservation(),member(),"reviewContents");
+        return new Review(reservation(),member(),"reviewContents",null);
     }
 
     public static Comment comment(final String content){
