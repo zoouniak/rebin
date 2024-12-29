@@ -34,7 +34,9 @@ public enum ErrorCode {
     INVALID_PHONE_FORMAT("M002", "err.invalid.number-format"),
     EXCEED_NAME_LENGTH("M003", "err.exceed.name-length"),
     ALREADY_EXIST("T001","err.already-exist.timeslot"),
-    CANT_DELETE("T002","err.has-reservation.timeslot");
+    CANT_DELETE_TIMESLOT("T002","err.has-reservation.timeslot"),
+    INVALID_COMMENT("C001","존재하지 않는 댓글입니다."),
+    NOT_COMMENT_AUTHOR("C002","댓글 작성자가 아닙니다.");
 
     private final String code;
     private final String msg;

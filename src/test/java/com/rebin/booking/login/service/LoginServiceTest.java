@@ -6,6 +6,7 @@ import com.rebin.booking.login.domain.repository.RefreshTokenRepository;
 import com.rebin.booking.login.dto.request.LoginRequest;
 import com.rebin.booking.login.dto.response.AccessTokenResponse;
 import com.rebin.booking.login.dto.response.AuthTokens;
+import com.rebin.booking.login.dto.response.LoginResponse;
 import com.rebin.booking.login.infra.JwtProvider;
 import com.rebin.booking.login.infra.oauthProvider.OAuthProvider;
 import com.rebin.booking.login.infra.oauthProvider.OAuthProviders;
@@ -95,10 +96,10 @@ class LoginServiceTest {
                 .thenReturn(member);
 
         // when
-        AuthTokens actual = loginService.login(PROVIDER, new LoginRequest("code"));
+        LoginResponse response = loginService.login(PROVIDER, new LoginRequest("code"));
 
         // then
-        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+        assertThat(response.tokens()).usingRecursiveComparison().isEqualTo(expected);
         verify(refreshTokenRepository).save(any());
     }
 
@@ -115,10 +116,10 @@ class LoginServiceTest {
                 .thenReturn(Optional.of(member));
 
         // when
-        AuthTokens actual = loginService.login(PROVIDER, new LoginRequest("code"));
+        LoginResponse response = loginService.login(PROVIDER, new LoginRequest("code"));
 
         // then
-        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+        assertThat(response.tokens()).usingRecursiveComparison().isEqualTo(expected);
         verify(refreshTokenRepository).save(any());
         verify(memberRepository, never()).save(any());
     }

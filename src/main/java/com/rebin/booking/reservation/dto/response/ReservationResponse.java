@@ -9,6 +9,7 @@ public record ReservationResponse(
         Long id,
         String productName,
         String productImage,
+        int productPrice,
         LocalDate shootDate,
         ReservationStatusType statusType
 
@@ -18,6 +19,7 @@ public record ReservationResponse(
                 reservation.getId(),
                 reservation.getProduct().getName(),
                 reservation.getProduct().getThumbnail(),
+                reservation.getProduct().getPrice(),
                 reservation.getShootDate(),
                 reservation.getStatus()
         );

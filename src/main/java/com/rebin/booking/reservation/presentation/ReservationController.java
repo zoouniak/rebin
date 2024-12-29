@@ -7,6 +7,7 @@ import com.rebin.booking.reservation.dto.request.ConfirmRequest;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
 import com.rebin.booking.reservation.dto.request.ReservationUpdateRequest;
+import com.rebin.booking.reservation.dto.response.MemberInfoResponse;
 import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
 import com.rebin.booking.reservation.dto.response.ReservationResponse;
 import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
@@ -31,6 +32,13 @@ public class ReservationController {
     public ResponseEntity<ReservationSaveResponse> reserve(@Auth Accessor accessor,
                                                            @RequestBody @Valid ReservationRequest request) {
         return ResponseEntity.ok(reservationService.reserve(accessor.getMemberId(), request));
+    }
+
+    @Operation(summary = "예약자 자동 완성을 위한 사용자 정보")
+    @GetMapping("/auto-fill")
+    @MemberOnly
+    public ResponseEntity<MemberInfoResponse> getAutoFillMemberInfo(@Auth Accessor accessor){
+        return ResponseEntity.ok(reservationService.getMemberInfoForAutoFill(accessor.getMemberId()));
     }
 
     @Operation(summary = "예약 상태 별 조회(촬영 전/중/후)")

@@ -21,7 +21,7 @@ public class AdminTimeSlotController {
     @PostMapping
     @Operation(summary = "타임슬롯 생성")
     public ResponseEntity<TimeSlotResponse> createTimeSlot(@RequestBody TimeSlotRequest request) {
-        return ResponseEntity.ok(adminTimeSlotService.CreateTimeSlot(request.date(), request.time()));
+        return ResponseEntity.ok(adminTimeSlotService.createTimeSlot(request.date(), request.time()));
     }
 
     @GetMapping

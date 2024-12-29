@@ -7,6 +7,7 @@ import com.rebin.booking.login.domain.repository.RefreshTokenRepository;
 import com.rebin.booking.login.dto.request.LoginRequest;
 import com.rebin.booking.login.dto.response.AccessTokenResponse;
 import com.rebin.booking.login.dto.response.AuthTokens;
+import com.rebin.booking.login.dto.response.LoginResponse;
 import com.rebin.booking.login.infra.JwtProvider;
 import com.rebin.booking.login.infra.oauthProvider.OAuthProvider;
 import com.rebin.booking.login.infra.oauthProvider.OAuthProviders;
@@ -29,7 +30,7 @@ public class LoginService {
     private final OAuthProviders oAuthProviders;
     private final JwtProvider jwtProvider;
 
-    public AuthTokens login(final String provider, final LoginRequest loginRequest) {
+    public LoginResponse login(final String provider, final LoginRequest loginRequest) {
         final OAuthProvider strategy = oAuthProviders.mapping(provider);
         final OAuthUserInfo userInfo = strategy.getUserInfo(loginRequest.code());
         // 획득한 사용자 정보 db에 조회
@@ -44,7 +45,7 @@ public class LoginService {
         // refreshtoken 저장
         refreshTokenRepository.save(new RefreshToken(loginTokens.refreshToken(), loginUser.getId()));
 
-        return loginTokens;
+        return LoginResponse.from(loginUser.getNickname(), loginTokens);
     }
 
     public AccessTokenResponse extend(String authorizeHeader, String refreshTokenReq) {
