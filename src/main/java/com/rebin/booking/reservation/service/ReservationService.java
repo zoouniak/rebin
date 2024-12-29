@@ -14,6 +14,7 @@ import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 import com.rebin.booking.reservation.dto.request.ConfirmRequest;
 import com.rebin.booking.reservation.dto.request.ReservationLookUpRequest;
 import com.rebin.booking.reservation.dto.request.ReservationRequest;
+import com.rebin.booking.reservation.dto.response.MemberInfoResponse;
 import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
 import com.rebin.booking.reservation.dto.response.ReservationResponse;
 import com.rebin.booking.reservation.dto.response.ReservationSaveResponse;
@@ -192,4 +193,9 @@ public class ReservationService {
         }
     }
 
+    public MemberInfoResponse getMemberInfoForAutoFill(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ReservationException(INVALID_MEMBER));
+        return MemberInfoResponse.from(member);
+    }
 }
