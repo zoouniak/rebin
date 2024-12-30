@@ -55,12 +55,13 @@ public class Review extends BaseTimeEntity {
     private boolean deleted = false;
 
     @Builder
-    public Review(Reservation reservation, Member member, String content) {
+    public Review(Reservation reservation, Member member, String content,List<Comment> comments) {
         this.reservation = reservation;
         this.shootDate = reservation.getShootDate();
         this.member = member;
         this.product = reservation.getProduct();
         this.content = content;
+        this.comments = comments;
     }
 
     public void editContent(String content) {

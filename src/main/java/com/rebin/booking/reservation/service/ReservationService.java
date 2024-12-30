@@ -51,11 +51,11 @@ public class ReservationService {
 
     @Transactional
     public ReservationSaveResponse reserve(final Long memberId, final ReservationRequest request) {
-        Member member = findMemberWithIdAndEmail(memberId, request.email());
+        Member member = findMember(memberId);
         member.updateMemberIfNameOrPhoneMissing(request.name(), request.phone());
 
         Product product = findProduct(request.productId());
-        TimeSlot timeSlot = findTimeSlot(request.timeSlotId());
+        TimeSlot timeSlot = findTimeSlotWithPessimisticLock(request.timeSlotId());
         String code = generateUniqueReservationCode();
 
         timeSlot.setUnAvailable();
@@ -138,14 +138,13 @@ public class ReservationService {
         if (!reservation.isCanChange() || LocalDate.now().isEqual(reservation.getShootDate())) // 촬영날짜당일에는 변경 불가
             throw new ReservationException(CANCELLATION_NOT_ALLOWED);
 
-        TimeSlot timeSlot = findTimeSlot(timeSlotId);
+        TimeSlot timeSlot = findTimeSlotWithPessimisticLock(timeSlotId);
 
         reservation.getTimeSlot().setAvailable();
         reservation.changeTimeSlot(timeSlot);
 
         timeSlot.setUnAvailable();
-
-
+        publisher.publishEvent(new ReservationEvent(CHANGED, reservation.getCode()));
     }
 
 
@@ -161,8 +160,8 @@ public class ReservationService {
         throw new ReservationException(MAX_ATTEMPTS_EXCEEDED);
     }
 
-    private Member findMemberWithIdAndEmail(final Long memberId, final String email) {
-        return memberRepository.findByIdAndEmail(memberId, email)
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new ReservationException(INVALID_REQUEST));
     }
 
@@ -171,8 +170,8 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationException(INVALID_PRODUCT));
     }
 
-    private TimeSlot findTimeSlot(final Long timeSlotId) {
-        return timeSlotRepository.findById(timeSlotId)
+    private TimeSlot findTimeSlotWithPessimisticLock(final Long timeSlotId){
+        return timeSlotRepository.findByIdWithTimeSlot(timeSlotId)
                 .orElseThrow(() -> new ReservationException(INVALID_TIMESLOT));
     }
 

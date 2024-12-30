@@ -23,12 +23,19 @@ public record ReservationDetailResponse(
         ProductReservationResponse productInfo
 
 ) {
+    private static LocalTime getTime(Reservation reservation) {
+        if (reservation.getTimeSlot() == null)
+            return null;
+
+        return reservation.getTimeSlot().getStartTime();
+    }
+
     public static ReservationDetailResponse of(Reservation reservation) {
         return new ReservationDetailResponse(
                 reservation.getId(),
                 reservation.getCode(),
                 reservation.getShootDate(),
-                reservation.getTimeSlot().getStartTime(),
+                getTime(reservation),
                 reservation.getMember().getName(),
                 reservation.getMember().getPhone(),
                 reservation.getStatus(),

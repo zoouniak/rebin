@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-import static com.rebin.booking.reservation.domain.type.ReservationStatusType.CANCELED;
-import static com.rebin.booking.reservation.domain.type.ReservationStatusType.CONFIRM_REQUESTED;
+import static com.rebin.booking.reservation.domain.type.ReservationStatusType.*;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -105,5 +104,9 @@ public class Reservation extends BaseTimeEntity {
         this.canChange = false;
         // 촬영 날짜 동기화
         this.shootDate = timeSlot.getDate();
+    }
+
+    public void changeStatusAfterReview(){
+        this.status = REVIEW_COMPLETED;
     }
 }

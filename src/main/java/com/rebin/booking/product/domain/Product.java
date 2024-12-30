@@ -51,6 +51,8 @@ public class Product extends BaseTimeEntity {
     @OneToMany(mappedBy = "product", cascade = REMOVE)
     private List<ProductImage> images = new ArrayList<>();
 
+    private boolean deleted = false;
+
     @Builder
     public Product(Long id, String name, int price, String summary, String description, String thumbnail, int deposit, int additionalFee, String guideLine, List<ProductImage> images) {
         this.id = id;
