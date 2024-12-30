@@ -1,13 +1,10 @@
 package com.rebin.booking.info.presentation;
 
-import com.rebin.booking.info.dto.InfoRequest;
+import com.rebin.booking.info.dto.InfoDto;
 import com.rebin.booking.info.service.AdminInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,9 +14,14 @@ import java.util.List;
 public class AdminInfoController {
     private final AdminInfoService adminInfoService;
 
+    @GetMapping
+    public ResponseEntity<List<InfoDto>> getInfo() {
+        return ResponseEntity.ok(adminInfoService.getInfoList());
+    }
+
     @PostMapping
-    public ResponseEntity<Void> saveInfo(@RequestBody List<InfoRequest> infoRequestList){
-        adminInfoService.saveInfoList(infoRequestList);
+    public ResponseEntity<Void> saveInfo(@RequestBody List<InfoDto> infoDtoList) {
+        adminInfoService.saveInfoList(infoDtoList);
         return ResponseEntity.ok().build();
     }
 }
