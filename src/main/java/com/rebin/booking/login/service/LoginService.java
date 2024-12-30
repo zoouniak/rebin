@@ -18,6 +18,9 @@ import com.rebin.booking.member.type.ProviderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static com.rebin.booking.common.excpetion.ErrorCode.FAIL_EXTEND;
 import static com.rebin.booking.common.excpetion.ErrorCode.INVALID_REFRESH_TOKEN;
 
@@ -79,6 +82,7 @@ public class LoginService {
     }
 
     private Member createUser(final String loginId, final String email,final String nickname, ProviderType provider) {
-        return memberRepository.save(new Member(loginId, email,nickname, provider));
+        String nicknameWithDate = nickname+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+        return memberRepository.save(new Member(loginId, email,nicknameWithDate, provider));
     }
 }
