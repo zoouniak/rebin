@@ -6,5 +6,6 @@ public enum ReservationStatusType {
     PAYMENT_CONFIRMED,  // 입금 완료
     SHOOTING_COMPLETED, // 촬영 완료
     REVIEW_COMPLETED,   // 리뷰 작성 완료
-    CANCELED            // 예약 취소됨
+    CANCELED,            // 예약 취소됨
+    CHANGED // 예약 변경
 }

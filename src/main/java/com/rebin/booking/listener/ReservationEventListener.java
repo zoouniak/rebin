@@ -46,6 +46,7 @@ public class ReservationEventListener {
             case CONFIRM_REQUESTED -> subject.append("예약금 입금 확인 요청이 도착했습니다");
             case SHOOTING_COMPLETED -> subject.append("촬영이 완료되었습니다.");
             case PAYMENT_CONFIRMED -> subject.append("예약금 입금 확인이 완료되었습니다.");
+            case CHANGED -> subject.append("예약이 변경되었습니다.");
         }
         return subject.toString();
     }

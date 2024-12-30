@@ -144,8 +144,7 @@ public class ReservationService {
         reservation.changeTimeSlot(timeSlot);
 
         timeSlot.setUnAvailable();
-
-
+        publisher.publishEvent(new ReservationEvent(CHANGED, reservation.getCode()));
     }
 
 
