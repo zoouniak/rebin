@@ -29,4 +29,12 @@ public class Admin {
         this.loginId = loginId;
         this.password = password;
     }
+
+    public void changeLoginId(String newLoginId){
+        this.loginId = newLoginId;
+    }
+
+    public void changePassword(String newPassword){
+        this.password = newPassword;
+    }
 }
