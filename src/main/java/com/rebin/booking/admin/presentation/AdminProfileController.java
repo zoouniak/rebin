@@ -6,6 +6,7 @@ import com.rebin.booking.admin.service.AdminProfileService;
 import com.rebin.booking.auth.domain.Accessor;
 import com.rebin.booking.auth.domain.AdminAuth;
 import com.rebin.booking.auth.domain.AdminOnly;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminProfileController {
     private final AdminProfileService adminProfileService;
 
+    @Operation(summary = "관리자 아이디 변경")
     @PostMapping("/id")
     @AdminOnly
     public ResponseEntity<Void> changeLoginId(@AdminAuth Accessor accessor,
@@ -27,6 +29,7 @@ public class AdminProfileController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "관리자 비밀번호 변경")
     @PostMapping("/password")
     @AdminOnly
     public ResponseEntity<Void> changePassword(@AdminAuth Accessor accessor,
