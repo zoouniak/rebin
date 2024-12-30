@@ -64,6 +64,8 @@ public class ReviewService {
                 .member(member)
                 .comments(List.of())
                 .build());
+
+        reservation.changeStatusAfterReview();
         return ReviewResponse.of(save, 0, false);
     }
 
