@@ -14,7 +14,7 @@ import static com.rebin.booking.common.excpetion.ErrorCode.EXCEED_NAME_LENGTH;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)// todo 공부
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Member extends BaseTimeEntity {
     @Column
     private String name;
 
-    @Column
+    @Column(unique = true)
     private String nickname;
 
     @Column
