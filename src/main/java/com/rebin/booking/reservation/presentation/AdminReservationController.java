@@ -40,7 +40,14 @@ public class AdminReservationController {
     @GetMapping("/{code}")
     public ResponseEntity<ReservationDetailResponse> getReservation(
             @PathVariable String code
-    ){
+    ) {
         return ResponseEntity.ok(adminReservationService.getReservationByCode(code));
+    }
+
+    @Operation(summary = "입금 확인 요청 accept")
+    @PatchMapping("/deposit/{reservationId}")
+    public ResponseEntity<Void> confirmPaymentRequest(@PathVariable Long reservationId) {
+        adminReservationService.confirmPaymentRequest(reservationId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -23,6 +23,8 @@ public enum ErrorCode {
     INVALID_RESERVATION("R004", "err.invalid.reservation"),
     CANT_CANCEL("R005", "err.fail-cancel.reservation"),
     CANCELLATION_NOT_ALLOWED("R006", "err.unavailable.cancellation"),
+    CONFIRM_REQUEST_NOT_ALLOWED("R007","예약금이 입금된 상태가 아닙니다."),
+    REVIEW_NOT_ALLOWED("R008","리뷰 작성 가능한 상태가 아닙니다."),
     ALREADY_WRITE("V001", "err.already-write.review"),
     INVALID_REVIEW("V002", "err.invalid.review"),
     INVALID_IMG_PATH("I001", "err.invalid.path"),

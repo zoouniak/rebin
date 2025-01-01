@@ -43,4 +43,11 @@ public class AdminReservationService {
 
         return ReservationDetailResponse.of(reservation);
     }
+
+    public void confirmPaymentRequest(final Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationException(ErrorCode.INVALID_RESERVATION));
+
+        reservation.confirm();
+    }
 }

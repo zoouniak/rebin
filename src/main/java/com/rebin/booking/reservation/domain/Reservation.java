@@ -1,6 +1,7 @@
 package com.rebin.booking.reservation.domain;
 
 import com.rebin.booking.common.domain.BaseTimeEntity;
+import com.rebin.booking.common.excpetion.ReservationException;
 import com.rebin.booking.member.domain.Member;
 import com.rebin.booking.product.domain.Product;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+import static com.rebin.booking.common.excpetion.ErrorCode.CONFIRM_REQUEST_NOT_ALLOWED;
+import static com.rebin.booking.common.excpetion.ErrorCode.REVIEW_NOT_ALLOWED;
 import static com.rebin.booking.reservation.domain.type.ReservationStatusType.*;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -96,7 +99,12 @@ public class Reservation extends BaseTimeEntity {
         this.status = CONFIRM_REQUESTED;
         this.payerName = payerName;
         this.paymentDate = paymentDate;
+    }
 
+    public void confirm() {
+        if (this.status != CONFIRM_REQUESTED)
+            throw new ReservationException(CONFIRM_REQUEST_NOT_ALLOWED);
+        this.status = PAYMENT_CONFIRMED;
     }
 
     public void changeTimeSlot(TimeSlot timeSlot) {
@@ -106,7 +114,9 @@ public class Reservation extends BaseTimeEntity {
         this.shootDate = timeSlot.getDate();
     }
 
-    public void changeStatusAfterReview(){
+    public void changeStatusAfterReview() {
+        if(this.status != SHOOTING_COMPLETED)
+            throw new ReservationException(REVIEW_NOT_ALLOWED);
         this.status = REVIEW_COMPLETED;
     }
 }
