@@ -10,6 +10,7 @@ import com.rebin.booking.product.domain.repository.ProductRepository;
 import com.rebin.booking.product.dto.request.ProductCreateRequest;
 import com.rebin.booking.product.dto.response.AdminProductResponse;
 import com.rebin.booking.product.dto.response.ProductCreateResponse;
+import com.rebin.booking.product.dto.response.ProductDetailResponse;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -95,6 +96,13 @@ public class AdminProductService {
                 .toList();
     }
 
+    public ProductDetailResponse getProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException(ErrorCode.INVALID_PRODUCT));
+
+        return ProductDetailResponse.of(product);
+    }
+
     private int countReservationsByProduct(Long productId) {
         return reservationRepository.countByProductId(productId);
     }
@@ -143,6 +151,4 @@ public class AdminProductService {
                                 .build())
                 .toList();
     }
-
-
 }

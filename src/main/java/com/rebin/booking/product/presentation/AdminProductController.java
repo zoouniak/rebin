@@ -3,6 +3,7 @@ package com.rebin.booking.product.presentation;
 import com.rebin.booking.product.dto.request.ProductCreateRequest;
 import com.rebin.booking.product.dto.response.AdminProductResponse;
 import com.rebin.booking.product.dto.response.ProductCreateResponse;
+import com.rebin.booking.product.dto.response.ProductDetailResponse;
 import com.rebin.booking.product.service.AdminProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -43,5 +44,11 @@ public class AdminProductController {
     @GetMapping
     public ResponseEntity<List<AdminProductResponse>> getProducts() {
         return ResponseEntity.ok(adminProductService.getProducts());
+    }
+
+    @Operation(summary = "상품 상세조회")
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDetailResponse> getProduct(@PathVariable Long productId){
+        return ResponseEntity.ok(adminProductService.getProduct(productId));
     }
 }
