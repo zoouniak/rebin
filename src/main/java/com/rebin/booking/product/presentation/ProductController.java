@@ -33,8 +33,8 @@ public class ProductController {
 
     @Operation(summary = "상품 상세 조회")
     @GetMapping("/{productId}")
-    ResponseEntity<ProductDetailResponse> getProduct(@Auth final Accessor accessor, @PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.getProductDetail(productId, accessor.getMemberId()));
+    ResponseEntity<ProductDetailResponse> getProduct(@PathVariable final Long productId) {
+        return ResponseEntity.ok(productService.getProductDetail(productId));
     }
 
     @Operation(summary = "상품 리뷰 조회 페이지네이션 파라미터 page")
