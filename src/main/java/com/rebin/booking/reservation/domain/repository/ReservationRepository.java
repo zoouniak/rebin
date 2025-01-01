@@ -34,4 +34,5 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     boolean existsByTimeSlotId(Long timeSlotId);
 
     int countByShootDateBetween(LocalDate startDate, LocalDate endDate);
+    int countByProductId(Long productId);
 }

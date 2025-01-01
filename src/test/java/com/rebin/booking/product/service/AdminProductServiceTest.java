@@ -28,9 +28,9 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProductWriteServiceTest {
+class AdminProductServiceTest {
     @InjectMocks
-    ProductWriteService productWriteService;
+    AdminProductService adminProductService;
 
     @Mock
     ProductRepository productRepository;
@@ -57,7 +57,7 @@ class ProductWriteServiceTest {
         when(productRepository.findById(any())).thenReturn(Optional.empty());
 
         // when & then
-        ProductException exception = assertThrows(ProductException.class, () -> productWriteService.updateProduct(1L, request));
+        ProductException exception = assertThrows(ProductException.class, () -> adminProductService.updateProduct(1L, request));
         Assertions.assertEquals(ErrorCode.INVALID_PRODUCT.getCode(), exception.getCode());
     }
 
@@ -80,7 +80,7 @@ class ProductWriteServiceTest {
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
         // when
-        productWriteService.updateProduct(1L, request);
+        adminProductService.updateProduct(1L, request);
 
         // then
         verify(productRepository).save(argThat(updated ->
@@ -122,7 +122,7 @@ class ProductWriteServiceTest {
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
         // when
-        productWriteService.updateProduct(1L, request);
+        adminProductService.updateProduct(1L, request);
 
         // then
         verify(productRepository).save(argThat(updated ->
@@ -164,7 +164,7 @@ class ProductWriteServiceTest {
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
         // when
-        productWriteService.updateProduct(1L, request);
+        adminProductService.updateProduct(1L, request);
 
         // then
         verify(productRepository).save(argThat(updated ->
