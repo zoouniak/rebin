@@ -10,6 +10,7 @@ import com.rebin.booking.reservation.dto.response.ReservationCountResponse;
 import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -44,6 +45,7 @@ public class AdminReservationService {
         return ReservationDetailResponse.of(reservation);
     }
 
+    @Transactional
     public void confirmPaymentRequest(final Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(ErrorCode.INVALID_RESERVATION));
