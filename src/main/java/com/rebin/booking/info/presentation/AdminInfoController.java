@@ -2,6 +2,7 @@ package com.rebin.booking.info.presentation;
 
 import com.rebin.booking.info.dto.InfoDto;
 import com.rebin.booking.info.service.AdminInfoService;
+import com.rebin.booking.info.service.InfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminInfoController {
     private final AdminInfoService adminInfoService;
+    private final InfoService infoService;
 
     @Operation(summary = "관리자 소개 조회")
     @GetMapping
     public ResponseEntity<List<InfoDto>> getInfo() {
-        return ResponseEntity.ok(adminInfoService.getInfoList());
+        return ResponseEntity.ok(infoService.getInfoList());
     }
 
     @Operation(summary = "관리자 소개 저장")

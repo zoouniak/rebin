@@ -23,10 +23,4 @@ public class AdminInfoService {
                 .toList();
         infoRepository.saveAll(infos);
     }
-
-    public List<InfoDto> getInfoList(){
-        return infoRepository.findAll().stream()
-                .map(InfoDto::from)
-                .toList();
-    }
 }
