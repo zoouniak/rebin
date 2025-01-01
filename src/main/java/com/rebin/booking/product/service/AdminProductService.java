@@ -8,7 +8,10 @@ import com.rebin.booking.product.domain.ProductImage;
 import com.rebin.booking.product.domain.repository.CustomProductRepository;
 import com.rebin.booking.product.domain.repository.ProductRepository;
 import com.rebin.booking.product.dto.request.ProductCreateRequest;
+import com.rebin.booking.product.dto.response.AdminProductResponse;
 import com.rebin.booking.product.dto.response.ProductCreateResponse;
+import com.rebin.booking.product.dto.response.ProductDetailResponse;
+import com.rebin.booking.reservation.domain.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -18,9 +21,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductWriteService {
+public class AdminProductService {
     private final ProductRepository productRepository;
     private final CustomProductRepository customProductRepository;
+    private final ReservationRepository reservationRepository;
     private final ApplicationEventPublisher publisher;
 
     @Transactional
@@ -80,6 +84,29 @@ public class ProductWriteService {
         return newImages;
     }
 
+    public List<AdminProductResponse> getProducts() {
+        List<Product> all = productRepository.findAll();
+        return all.stream()
+                .map(product -> new AdminProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        countReservationsByProduct(product.getId())
+                ))
+                .toList();
+    }
+
+    public ProductDetailResponse getProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException(ErrorCode.INVALID_PRODUCT));
+
+        return ProductDetailResponse.of(product);
+    }
+
+    private int countReservationsByProduct(Long productId) {
+        return reservationRepository.countByProductId(productId);
+    }
+
     private ProductImage makeUpdatedImages(final List<ProductImage> oldImages, final String imageName, final Product product) {
         return oldImages.stream()
                 .filter(oldImage -> oldImage.getUrl().equals(imageName))
@@ -124,6 +151,4 @@ public class ProductWriteService {
                                 .build())
                 .toList();
     }
-
-
 }

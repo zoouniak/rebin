@@ -4,8 +4,10 @@ import com.rebin.booking.auth.domain.Accessor;
 import com.rebin.booking.auth.domain.AdminAuth;
 import com.rebin.booking.auth.domain.AdminOnly;
 import com.rebin.booking.notice.dto.request.NoticeRequest;
+import com.rebin.booking.notice.dto.response.NoticePageResponse;
 import com.rebin.booking.notice.dto.response.NoticeResponse;
 import com.rebin.booking.notice.service.AdminNoticeService;
+import com.rebin.booking.notice.service.NoticeReadService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminNoticeController {
     private final AdminNoticeService adminNoticeService;
+    private final NoticeReadService noticeReadService;
 
     @Operation(summary = "공지사항 등록")
     @PostMapping
@@ -46,5 +49,17 @@ public class AdminNoticeController {
             @PathVariable Long noticeId) {
         adminNoticeService.deleteNotice(noticeId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "공지사항 목록 조회")
+    @GetMapping
+    public ResponseEntity<NoticePageResponse> getNotices(@RequestParam int page) {
+        return ResponseEntity.ok(noticeReadService.getNotices(page));
+    }
+
+    @Operation(summary = "공지사항 상세 조회")
+    @GetMapping("/{noticeId}")
+    public ResponseEntity<NoticeResponse> getNotice(@PathVariable Long noticeId){
+        return ResponseEntity.ok(noticeReadService.getNotice(noticeId));
     }
 }
