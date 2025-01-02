@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -25,9 +26,11 @@ public class AdminReservationService {
     public ReservationCountResponse countReservationsThisMonth() {
         LocalDate now = LocalDate.now();
         int year = now.getYear();
-        Month month = Month.FEBRUARY;
-        LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = LocalDate.of(year, month, month.maxLength());
+        Month month = now.getMonth();
+
+        YearMonth yearMonth = YearMonth.of(year, month.getValue());
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
 
         int count = reservationRepository.countByShootDateBetween(startDate, endDate);
         return new ReservationCountResponse(count);
