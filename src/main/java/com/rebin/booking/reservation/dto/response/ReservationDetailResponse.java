@@ -5,6 +5,7 @@ import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record ReservationDetailResponse(
@@ -20,6 +21,9 @@ public record ReservationDetailResponse(
         String notes,
         int totalPrice,
         boolean canChange,
+        LocalDateTime createdAt,
+        String payerName,
+        LocalDate paymentDate,
         ProductReservationResponse productInfo
 
 ) {
@@ -44,6 +48,9 @@ public record ReservationDetailResponse(
                 reservation.getNotes(),
                 reservation.getPrice(),
                 reservation.isCanChange(),
+                reservation.getCreatedAt(),
+                reservation.getPayerName(),
+                reservation.getPaymentDate(),
                 ProductReservationResponse.of(reservation.getProduct())
         );
     }

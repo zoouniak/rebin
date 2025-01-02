@@ -26,7 +26,8 @@ public class CustomReservationRepositoryImpl implements CustomReservationReposit
                         reservation.code,
                         reservation.product.name,
                         reservation.member.name,
-                        reservation.createdAt,
+                        reservation.timeSlot.date,
+                        reservation.timeSlot.startTime,
                         reservation.createdAt,
                         reservation.status
                 ))
