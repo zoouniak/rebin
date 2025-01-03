@@ -7,6 +7,7 @@ import com.rebin.booking.admin.dto.request.AdminPasswordRequest;
 import com.rebin.booking.common.excpetion.AdminException;
 import com.rebin.booking.common.excpetion.ErrorCode;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +31,9 @@ class AdminProfileServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
+    @DisplayName("아이디를 변경한다.")
     void changeId() {
+        // given
         Admin admin = new Admin(1L, "loginId", "password");
         String newId = "newId";
         when(adminRepository.findById(Mockito.any()))
@@ -45,6 +47,7 @@ class AdminProfileServiceTest {
     }
 
     @Test
+    @DisplayName("비밀번호르르 변경한다.")
     void changePassword() {
         // given
         AdminPasswordRequest request = new AdminPasswordRequest("original", "newPassword");
@@ -62,6 +65,7 @@ class AdminProfileServiceTest {
     }
 
     @Test
+    @DisplayName("기존 비밀번호를 잘못 입력하면 에러가 발생한다.")
     void changePassword_unMatchPassword() {
         // given
         AdminPasswordRequest request = new AdminPasswordRequest("original", "newPassword");
