@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomTimeSlotRepositoryImpl implements CustomTimeSlotRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final static RowMapper<TimeSlotResponseForAdmin> rowMapper = (ResultSet rs, int rowNum) ->
+    private static final RowMapper<TimeSlotResponseForAdmin> rowMapper = (ResultSet rs, int rowNum) ->
             new TimeSlotResponseForAdmin(
                     rs.getLong("id"),
                     rs.getObject("date", LocalDate.class),
@@ -25,10 +25,11 @@ public class CustomTimeSlotRepositoryImpl implements CustomTimeSlotRepository {
                     rs.getBoolean("is_available"),
                     rs.getString("code")
             );
+
     @Override
     public List<TimeSlotResponseForAdmin> findAllByDate(LocalDate date) {
         String sql = """
-                SELECT date, start_time, is_available, code 
+                SELECT time_slot.id, date, start_time, is_available, code 
                 FROM time_slot 
                 LEFT JOIN reservation 
                 ON time_slot.id = reservation.time_slot_id
@@ -36,6 +37,6 @@ public class CustomTimeSlotRepositoryImpl implements CustomTimeSlotRepository {
                 """;
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("date", date);
-        return namedParameterJdbcTemplate.query(sql,param,rowMapper);
+        return namedParameterJdbcTemplate.query(sql, param, rowMapper);
     }
 }
