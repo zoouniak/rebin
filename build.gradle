@@ -44,7 +44,8 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
     // bcrypt
     implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
-
+    // logstash
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 
     // query dsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
