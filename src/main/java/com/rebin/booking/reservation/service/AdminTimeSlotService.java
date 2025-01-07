@@ -45,6 +45,7 @@ public class AdminTimeSlotService {
     }
 
     private boolean canDelete(final Long timeSlotId) {
-        return reservationRepository.existsByTimeSlotId(timeSlotId);
+        // 예약이 존재하지 않으면 삭제 가능
+        return !reservationRepository.existsByTimeSlotId(timeSlotId);
     }
 }
