@@ -136,7 +136,7 @@ public class ReservationService {
 
         // 변경 가능한 지 확인
         if (!reservation.isCanChange() || LocalDate.now().isEqual(reservation.getShootDate())) // 촬영날짜당일에는 변경 불가
-            throw new ReservationException(CANCELLATION_NOT_ALLOWED);
+            throw new ReservationException(CHANGED_NOT_ALLOWED);
 
         TimeSlot timeSlot = findTimeSlotWithPessimisticLock(timeSlotId);
 
