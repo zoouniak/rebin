@@ -299,7 +299,7 @@ class ReservationServiceTest {
 
         assertThatThrownBy(() -> reservationService.rescheduleTimeSlot(1L, 1L, 2L))
                 .isInstanceOf(ReservationException.class)
-                .hasMessage(ErrorCode.CANCELLATION_NOT_ALLOWED.getMsg());
+                .hasMessage(ErrorCode.CHANGED_NOT_ALLOWED.getMsg());
     }
 
     @Test
@@ -327,7 +327,7 @@ class ReservationServiceTest {
 
         assertThatThrownBy(() -> reservationService.rescheduleTimeSlot(1L, 1L, 2L))
                 .isInstanceOf(ReservationException.class)
-                .hasMessage(ErrorCode.CANCELLATION_NOT_ALLOWED.getMsg());
+                .hasMessage(ErrorCode.CHANGED_NOT_ALLOWED.getMsg());
     }
 
     private static ReservationRequest reservationRequest() {
