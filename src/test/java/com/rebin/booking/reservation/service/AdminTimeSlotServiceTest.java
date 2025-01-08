@@ -82,12 +82,25 @@ class AdminTimeSlotServiceTest {
     @DisplayName("타임슬롯을 삭제한다.")
     void deleteTimeSlotById() {
         when(reservationRepository.existsByTimeSlotId(any()))
-                .thenReturn(true);
+                .thenReturn(false);
 
         // when
         adminTimeSlotService.deleteTimeSlotById(1L);
 
         // then
         verify(timeSlotRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("예약이 있는 타임슬롯은 삭제할 수 없다")
+    void deleteTimeSlotByDate_hasReservation() {
+        when(reservationRepository.existsByTimeSlotId(any()))
+                .thenReturn(true);
+
+        // when & then
+        Assertions.assertThatThrownBy(() ->
+                        adminTimeSlotService.deleteTimeSlotById(1L))
+                .isInstanceOf(TimeSlotException.class)
+                .hasMessage(CANT_DELETE_TIMESLOT.getMsg());
     }
 }
