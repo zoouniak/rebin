@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.rebin.booking.common.excpetion.ErrorCode.INCORRECT_PASSWORD;
 import static com.rebin.booking.common.excpetion.ErrorCode.INVALID_ADMIN;
 
 @Service
@@ -28,10 +29,11 @@ public class AdminProfileService {
     public void changePassword(Long adminId, AdminPasswordRequest request){
         Admin admin = getAdmin(adminId);
 
-        if(!passwordEncoder.matches(admin.getPassword(), request.originalPassword()))
-            throw new AdminException(INVALID_ADMIN);
+       if(!passwordEncoder.matches(request.originalPassword(), admin.getPassword()))
+            throw new AdminException(INCORRECT_PASSWORD);
 
-        admin.changePassword(request.newPassword());
+        String encodePassword = passwordEncoder.encode(request.newPassword());
+        admin.changePassword(encodePassword);
     }
 
     private Admin getAdmin(Long adminId) {

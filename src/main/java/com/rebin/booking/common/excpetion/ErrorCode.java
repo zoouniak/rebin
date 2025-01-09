@@ -6,6 +6,7 @@ public enum ErrorCode {
     INVALID_REQUEST("A002", "잘못된 요청입니다."),
     INVALID_ARGUMENT("A003", "err.invalid.argument"),
     INVALID_ADMIN("AD001", "존재하지 않는 관계자입니다."),
+    INCORRECT_PASSWORD("AD004","비밀번호가 일치하지 않습니다."),
 
     FAIL_GET_USERINFO("L001", "사용자 정보를 불러오는 데 실패하였습니다."),
     INVALID_AUTHORIZE_CODE("L002", "잘못된 코드입니다."),
