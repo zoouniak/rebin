@@ -1,5 +1,6 @@
 package com.rebin.booking.reservation.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
 
@@ -10,6 +11,7 @@ public record ReservationResponse(
         String productName,
         String productImage,
         int productPrice,
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate shootDate,
         ReservationStatusType statusType
 
