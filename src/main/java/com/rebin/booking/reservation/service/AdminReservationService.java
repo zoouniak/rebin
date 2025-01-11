@@ -5,9 +5,7 @@ import com.rebin.booking.common.excpetion.ReservationException;
 import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.repository.CustomReservationRepository;
 import com.rebin.booking.reservation.domain.repository.ReservationRepository;
-import com.rebin.booking.reservation.dto.response.AdminReservationResponse;
-import com.rebin.booking.reservation.dto.response.ReservationCountResponse;
-import com.rebin.booking.reservation.dto.response.ReservationDetailResponse;
+import com.rebin.booking.reservation.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,5 +52,9 @@ public class AdminReservationService {
                 .orElseThrow(() -> new ReservationException(ErrorCode.INVALID_RESERVATION));
 
         reservation.confirm();
+    }
+
+    public List<ReservationDailyResponse> getReservationsByWeek() {
+        return customReservationRepository.getReservationsThisMonth();
     }
 }
