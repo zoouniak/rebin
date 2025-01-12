@@ -16,7 +16,7 @@ import static com.rebin.booking.common.excpetion.ErrorCode.SERVER_ERROR;
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
-        log.warn(e.getMessage(), e);
+        log.error(e.getMessage(), e);
         return ResponseEntity.badRequest().body(ErrorResponse.of(INVALID_ARGUMENT));
     }
 

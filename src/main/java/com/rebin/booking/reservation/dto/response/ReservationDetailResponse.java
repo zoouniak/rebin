@@ -1,5 +1,6 @@
 package com.rebin.booking.reservation.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rebin.booking.product.dto.response.ProductReservationResponse;
 import com.rebin.booking.reservation.domain.Reservation;
 import com.rebin.booking.reservation.domain.type.ReservationStatusType;
@@ -11,7 +12,9 @@ import java.time.LocalTime;
 public record ReservationDetailResponse(
         Long id,
         String code,
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate shootDate,
+        @JsonFormat(pattern = "HH:mm:ss")
         LocalTime time,
         String name,
         String phone,
@@ -21,8 +24,10 @@ public record ReservationDetailResponse(
         String notes,
         int totalPrice,
         boolean canChange,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime createdAt,
         String payerName,
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate paymentDate,
         ProductReservationResponse productInfo
 
